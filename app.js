@@ -289,18 +289,56 @@ function cardMarkup(place, index, jackpot = false) {
 
 function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-async function spinCard(card, index, pool, finalPlace, duration, jackpot) {
-  const started = performance.now();
-  card.classList.add('spinning');
-  while (performance.now() - started < duration) {
-    const randomPlace = pool[Math.floor(Math.random() * pool.length)];
-    card.innerHTML = cardMarkup(randomPlace, index);
-    const progress = Math.min(1, (performance.now() - started) / duration);
-    await wait(55 + Math.round(190 * progress ** 3));
+function reelMarkup(pool, finalPlace, index, jackpot) {
+  const faceCount = 8;
+  const angleStep = 360 / faceCount;
+  const radius = 121;
+  const faces = [finalPlace];
+  while (faces.length < faceCount) {
+    faces.push(pool[Math.floor(Math.random() * pool.length)] || finalPlace);
   }
-  card.classList.remove('spinning');
-  card.classList.add('landed');
-  card.classList.toggle('jackpot-card', jackpot);
+  return `
+    <div class="reel-window" aria-hidden="true">
+      <div class="reel-stage">
+        ${faces.map((place, faceIndex) => {
+          const name = jackpot && faceIndex === 0 ? '퇴근해' : (place.place_name || '이름 없는 음식점');
+          const cuisine = jackpot && faceIndex === 0 ? 'JACKPOT' : cuisineLabel(place);
+          const initial = jackpot && faceIndex === 0 ? '★' : placeInitial(place);
+          return `<div class="reel-face" style="transform:rotateX(${faceIndex * angleStep}deg) translateZ(${radius}px)">
+            <div class="place-avatar" data-cuisine="${escapeAttribute(place.cuisine || 'other')}">${escapeHtml(initial)}</div>
+            <div class="reel-face-copy">
+              <h3>${escapeHtml(name)}</h3>
+              <div class="reel-meta">${escapeHtml(cuisine)} · ${jackpot && faceIndex === 0 ? '1%' : escapeHtml(distanceText(place.distance))}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+async function spinCard(card, index, pool, finalPlace, duration, jackpot) {
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  card.className = 'place-card reel-card';
+  card.innerHTML = reelMarkup(pool, finalPlace, index, jackpot);
+  const stage = card.querySelector('.reel-stage');
+
+  if (!reduceMotion) {
+    const turns = 5 + index;
+    const spin = stage.animate([
+      { transform:'translate(-50%, -50%) rotateX(0deg)' },
+      { transform:`translate(-50%, -50%) rotateX(-${turns * 360}deg)` },
+    ], {
+      duration,
+      easing:'cubic-bezier(.12,.68,.08,1)',
+      fill:'forwards',
+    });
+    window.setTimeout(() => card.classList.add('is-braking'), Math.max(0, duration - 700));
+    await spin.finished;
+  } else {
+    await wait(80 + index * 70);
+  }
+
+  card.className = `place-card landed${jackpot ? ' jackpot-card' : ''}`;
   card.innerHTML = cardMarkup(finalPlace, index, jackpot);
 }
 
@@ -347,7 +385,7 @@ async function renderCards(items) {
     ? '전체 메뉴'
     : state.menus.map(menu => MENU_LABELS[menu]).filter(Boolean).join(' · ');
   $('#resultSummary').textContent = `${workplace?.label || '선택 근무지'} · ${distanceText(state.radius)} 이내 · ${menuText}`;
-  await Promise.all(cards.map((card,index) => spinCard(card,index,state.results,finalItems[index],1250 + index * 520,jackpot)));
+  await Promise.all(cards.map((card,index) => spinCard(card,index,state.results,finalItems[index],1900 + index * 620,jackpot)));
   if (jackpot) {
     $('#finalPick').textContent = '🎉 JACKPOT — 오늘의 메뉴는 퇴근입니다!';
     $('#finalPick').className = 'final-pick jackpot-banner';
