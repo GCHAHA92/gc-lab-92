@@ -30,7 +30,7 @@ const DEMO_PLACES = [
   ['d5','홍콩반점 금천점','음식점 > 중식','chinese',360], ['d6','소바정','음식점 > 일식 > 소바','japanese',170],
   ['d7','카츠하루','음식점 > 일식 > 돈까스','japanese',430], ['d8','오후파스타','음식점 > 양식','western',260],
   ['d9','우리동네김밥','음식점 > 분식 > 김밥','bunsik',120], ['d10','떡볶이연구소','음식점 > 분식','bunsik',390],
-].map(([id,place_name,category_name,cuisine,distance]) => ({ id,place_name,category_name,cuisine,distance:String(distance),road_address_name:'서울 금천구',place_url:'https://map.kakao.com/' }));
+].map(([id,place_name,category_name,cuisine,distance]) => ({ id,place_name,category_name,cuisine,cuisines:[cuisine],distance:String(distance),road_address_name:'서울 금천구',place_url:'https://map.kakao.com/' }));
 
 const STORAGE = {
   workplace: 'geumcheon-lunch-v2-workplace',
@@ -156,12 +156,20 @@ function classifyCuisine(place) {
     ['western',['양식','이탈리안','파스타','피자','스테이크','햄버거','브런치','샐러드']],
     ['bunsik',['분식','김밥','떡볶이','순대']],
   ];
-  for (const [key,tokens] of rules) if (tokens.some(token => hay.includes(token))) return key;
-  return 'other';
+  const matches = rules
+    .filter(([, tokens]) => tokens.some(token => hay.includes(token)))
+    .map(([key]) => key);
+  return matches.length ? matches : ['other'];
+}
+
+function placeCuisines(place) {
+  if (Array.isArray(place.cuisines) && place.cuisines.length) return place.cuisines;
+  return [place.cuisine || 'other'];
 }
 
 function menuMatches(place) {
-  return state.menus.includes('all') || state.menus.includes(place.cuisine);
+  return state.menus.includes('all')
+    || placeCuisines(place).some(cuisine => state.menus.includes(cuisine));
 }
 
 function loadKakaoSdk() {
@@ -198,7 +206,8 @@ function searchKakaoPlaces(point) {
       data.forEach(item => {
         const address = `${item.address_name || ''} ${item.road_address_name || ''}`;
         if (!address.includes('금천구')) return;
-        const place = { ...item, cuisine:classifyCuisine(item) };
+        const cuisines = classifyCuisine(item);
+        const place = { ...item, cuisines, cuisine:cuisines[0] || 'other' };
         if (menuMatches(place)) found.set(place.id, place);
       });
       pageCount += 1;
@@ -213,7 +222,8 @@ function searchKakaoPlaces(point) {
 }
 
 function cuisineLabel(place) {
-  if (MENU_LABELS[place.cuisine]) return MENU_LABELS[place.cuisine];
+  const labels = placeCuisines(place).map(cuisine => MENU_LABELS[cuisine]).filter(Boolean);
+  if (labels.length) return labels.join(' · ');
   const category = (place.category_name || '').split(' > ').filter(Boolean);
   return category.at(-2) || category.at(-1) || '음식점';
 }
