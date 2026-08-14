@@ -18,6 +18,17 @@ const MENU_SEARCH_TERMS = {
   bunsik: ['분식', '김밥', '떡볶이'],
 };
 
+const LUNCH_EXCLUDED_CATEGORY_TERMS = [
+  '아이스크림', '빙수', '디저트', '케이크', '제과', '베이커리',
+  '떡,한과', '떡/한과', '도넛', '호두과자',
+  '술집', '주점', '호프', '와인바', '칵테일바',
+];
+
+const LUNCH_EXCLUDED_NAME_TERMS = [
+  '무인아이스크림', '24시아이스크림', '아이스크림할인점',
+  '무인과자', '세계과자할인점',
+];
+
 const WORKPLACES = [
   ['geumcheon-office','금천구청','구청','서울특별시 금천구 시흥대로73길 70'],
   ['doksan1','독산1동 주민센터','독산','서울특별시 금천구 시흥대로123길 11'],
@@ -172,6 +183,15 @@ function menuMatches(place) {
     || placeCuisines(place).some(cuisine => state.menus.includes(cuisine));
 }
 
+function isLunchCandidate(place) {
+  const category = String(place.category_name || '').replaceAll(' ', '').toLowerCase();
+  const name = String(place.place_name || '').replaceAll(' ', '').toLowerCase();
+  if (LUNCH_EXCLUDED_CATEGORY_TERMS.some(term => category.includes(term.replaceAll(' ', '').toLowerCase()))) {
+    return false;
+  }
+  return !LUNCH_EXCLUDED_NAME_TERMS.some(term => name.includes(term.replaceAll(' ', '').toLowerCase()));
+}
+
 function loadKakaoSdk() {
   const key = window.GEUMCHEON_CONFIG?.kakaoJavaScriptKey || '';
   if (!key || key.includes('여기에_')) return Promise.resolve(false);
@@ -204,6 +224,7 @@ async function searchKakaoPlaces(point) {
 
   const collect = (data = []) => {
     data.forEach(item => {
+      if (!isLunchCandidate(item)) return;
       const address = `${item.address_name || ''} ${item.road_address_name || ''}`;
       if (!address.includes('금천구')) return;
       const cuisines = classifyCuisine(item);
