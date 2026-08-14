@@ -444,6 +444,13 @@ button { color: inherit; }
   font-size: 17px;
   font-weight: 900;
   border: 1px solid rgba(15,118,110,.12);
+  overflow: hidden;
+}
+.place-avatar img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 .place-avatar[data-cuisine="chinese"] { background: #fff0e8; color: #a24f32; }
 .place-avatar[data-cuisine="japanese"] { background: #fff5dd; color: #936b13; }
