@@ -456,6 +456,16 @@ button { color: inherit; }
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+.place-avatar.has-photo {
+  background: #eef3f5;
+  color: transparent;
+}
+.place-avatar.has-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
 .place-avatar[data-cuisine="chinese"] { background: #fff0e8; color: #a24f32; }
 .place-avatar[data-cuisine="japanese"] { background: #fff5dd; color: #936b13; }
 .place-avatar[data-cuisine="western"] { background: #f3ecff; color: #695099; }
@@ -503,8 +513,12 @@ button { color: inherit; }
   font-size: 11px;
   line-height: 1.55;
 }
-.map-link {
+.card-actions {
   margin-top: auto;
+  display: grid;
+  gap: 9px;
+}
+.map-link {
   display: flex;
   justify-content: space-between;
   gap: 10px;
@@ -514,6 +528,26 @@ button { color: inherit; }
   font-weight: 850;
 }
 .map-link:hover { color: var(--accent); }
+.like-button {
+  width: 100%;
+  border: 1px solid #e2dfe0;
+  border-radius: 9px;
+  background: #fff8f8;
+  color: #8b5960;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 850;
+}
+.like-button:hover { border-color: #dfa8af; background: #fff2f3; }
+.like-button.liked { border-color: #df8f9b; background: #ffecef; color: #a23c4d; }
+.like-button:disabled { opacity: .55; cursor: wait; }
+.like-heart { font-size: 16px; line-height: 1; }
+.like-count { min-width: 12px; font-size: 10px; }
 
 .roulette-actions {
   display: flex;

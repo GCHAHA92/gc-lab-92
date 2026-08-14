@@ -335,6 +335,93 @@ function placeAvatarMarkup(place) {
   return cuisineIconMarkup(place.cuisine || 'other');
 }
 
+const API_BASE = String(window.GEUMCHEON_CONFIG?.apiBaseUrl || '').replace(/\/$/, '');
+
+function apiUrl(path) {
+  return `${API_BASE}${path}`;
+}
+
+function getDeviceId() {
+  const key = 'geumcheon-lunch-device-id';
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
+async function loadPlacePhoto(place) {
+  try {
+    const response = await fetch(apiUrl(`/api/photo?id=${encodeURIComponent(place.id)}`));
+    if (!response.ok) return;
+    const data = await response.json();
+    if (!data.url) return;
+    const card = document.querySelector(`.place-card[data-place-id="${CSS.escape(String(place.id))}"]`);
+    const avatar = card?.querySelector('.place-avatar');
+    if (avatar) {
+      avatar.innerHTML = `<img src="${escapeAttribute(data.url)}" alt="" loading="lazy" />`;
+      avatar.classList.add('has-photo');
+    }
+  } catch {
+    // 사진 조회 실패 시 음식 종류 아이콘을 유지합니다.
+  }
+}
+
+async function loadLikeCounts(items) {
+  if (!items.length) return;
+  try {
+    const ids = items.map(item => item.id).join(',');
+    const response = await fetch(apiUrl(`/api/likes?ids=${encodeURIComponent(ids)}&deviceId=${encodeURIComponent(getDeviceId())}`));
+    if (!response.ok) return;
+    const data = await response.json();
+    items.forEach(item => updateLikeButton(item.id, data.items?.[item.id]));
+  } catch {
+    // 추천 API 연결 전에는 버튼을 그대로 둡니다.
+  }
+}
+
+function updateLikeButton(placeId, info = {}) {
+  const button = document.querySelector(`.like-button[data-place-id="${CSS.escape(String(placeId))}"]`);
+  if (!button) return;
+  const liked = Boolean(info.liked);
+  button.classList.toggle('liked', liked);
+  button.setAttribute('aria-pressed', liked ? 'true' : 'false');
+  button.querySelector('.like-heart').textContent = liked ? '♥' : '♡';
+  button.querySelector('.like-count').textContent = Number(info.count || 0).toLocaleString();
+}
+
+async function toggleLike(button) {
+  if (button.disabled) return;
+  button.disabled = true;
+  const placeId = button.dataset.placeId;
+  const place = state.visible.find(item => String(item.id) === String(placeId));
+  try {
+    const response = await fetch(apiUrl('/api/likes'), {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body:JSON.stringify({
+        placeId,
+        placeName:place?.place_name || '',
+        deviceId:getDeviceId(),
+      }),
+    });
+    if (!response.ok) throw new Error('추천 저장 실패');
+    updateLikeButton(placeId, await response.json());
+  } catch {
+    setStatus('추천을 저장하지 못했습니다. 잠시 후 다시 시도해주세요.', 'error');
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function hydrateRestaurantCards(items) {
+  await Promise.all([
+    ...items.map(loadPlacePhoto),
+    loadLikeCounts(items),
+  ]);
+}
+
 function cardMarkup(place, index, jackpot = false) {
   const mapUrl = place.place_url || 'https://map.kakao.com/';
   const address = place.road_address_name || place.address_name || '주소 정보 없음';
@@ -352,9 +439,16 @@ function cardMarkup(place, index, jackpot = false) {
       </div>
       <p class="category">${jackpot ? '오늘 점심은 자유입니다' : escapeHtml((place.category_name || '').replaceAll(' > ', ' · '))}</p>
       <p class="address">${jackpot ? '컴퓨터를 끄고 자리에서 일어나세요.' : escapeHtml(address)}</p>
-      ${jackpot ? '<span class="map-link">축하합니다 ★</span>' : `<a class="map-link" href="${escapeAttribute(mapUrl)}" target="_blank" rel="noopener noreferrer">
-        카카오맵에서 보기 <span aria-hidden="true">↗</span>
-      </a>`}
+      ${jackpot ? '<span class="map-link">축하합니다 ★</span>' : `<div class="card-actions">
+        <a class="map-link" href="${escapeAttribute(mapUrl)}" target="_blank" rel="noopener noreferrer">
+          카카오맵에서 보기 <span aria-hidden="true">↗</span>
+        </a>
+        <button class="like-button" type="button" data-place-id="${escapeAttribute(place.id || '')}" aria-pressed="false" aria-label="${escapeAttribute(place.place_name || '식당')} 추천">
+          <span class="like-heart" aria-hidden="true">♡</span>
+          <span>추천</span>
+          <strong class="like-count">0</strong>
+        </button>
+      </div>`}
   `;
 }
 
@@ -442,6 +536,7 @@ async function renderCards(items) {
   const cards = finalItems.map((place, index) => {
     const card = document.createElement('article');
     card.className = 'place-card';
+    card.dataset.placeId = String(place.id || '');
     card.innerHTML = cardMarkup(state.results[index % state.results.length], index);
     container.append(card);
     return card;
@@ -464,6 +559,7 @@ async function renderCards(items) {
   } else {
     $('#againBtn').classList.toggle('hidden', state.results.length <= 3);
     $('#rouletteActions').classList.remove('hidden');
+    hydrateRestaurantCards(items);
   }
   state.spinning = false;
 }
@@ -568,5 +664,9 @@ $$('#distanceGroup [data-radius]').forEach(button => {
 $('#searchBtn').addEventListener('click', searchPlaces);
 $('#againBtn').addEventListener('click', () => renderCards(pickThree(state.results)));
 $('#pickOneBtn').addEventListener('click', pickFinalRestaurant);
+$('#results').addEventListener('click', event => {
+  const button = event.target.closest('.like-button');
+  if (button) toggleLike(button);
+});
 
 init();
