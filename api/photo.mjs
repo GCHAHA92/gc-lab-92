@@ -4,6 +4,10 @@ const POSITIVE_TTL = 1000 * 60 * 60 * 24 * 30;
 const NEGATIVE_TTL = 1000 * 60 * 60 * 24;
 const CACHE_VERSION = 2;
 
+const MANUAL_PHOTOS = {
+  '347052149':'https://img1.kakaocdn.net/cthumb/local/C544x408.q50/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2F5A5DA4034B4C456196C346248693915B',
+};
+
 function normalizeUrl(value) {
   if (typeof value !== 'string') return '';
   let url = value.replaceAll('\\/', '/').replaceAll('&amp;', '&').trim();
@@ -84,6 +88,22 @@ export default async function handler(req, res) {
   try {
     const db = await getDatabase();
     const photos = db.collection('placePhotos');
+    const manualUrl = normalizeUrl(MANUAL_PHOTOS[placeId] || '');
+    if (manualUrl && isPhotoUrl(manualUrl)) {
+      const existing = await photos.findOne({ placeId });
+      const alreadySaved = existing?.url === manualUrl && existing?.source === 'manual';
+      if (!alreadySaved) {
+        await photos.updateOne(
+          { placeId },
+          { $set: { placeId, url:manualUrl, source:'manual', version:CACHE_VERSION, updatedAt:new Date() } },
+          { upsert:true },
+        );
+      }
+      res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
+      res.status(200).json({ url:manualUrl, cached:alreadySaved, source:'manual' });
+      return;
+    }
+
     const cached = await photos.findOne({ placeId });
     const cachedUrl = normalizeUrl(cached?.url || '');
     const ttl = cachedUrl ? POSITIVE_TTL : NEGATIVE_TTL;
