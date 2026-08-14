@@ -50,28 +50,16 @@ button { color: inherit; }
   font-size: 19px;
 }
 
-.brand-mark {
-  width: 15px;
-  height: 15px;
-  border-radius: 4px 4px 9px 4px;
-  background: var(--accent);
-  box-shadow: 8px -6px 0 -3px #78b9b1;
+.brand-logo {
+  width: 46px;
+  height: 46px;
+  object-fit: contain;
+  flex: 0 0 46px;
 }
 
 .header-note {
   color: var(--muted);
   font-size: 13px;
-}
-.header-note span {
-  display: inline-block;
-  margin-left: 6px;
-  padding: 4px 7px;
-  border: 1px solid #cbd8dc;
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: 800;
-  color: var(--blue);
-  vertical-align: 1px;
 }
 
 .workspace {
@@ -254,15 +242,6 @@ button { color: inherit; }
 .status.success { color: var(--accent-dark); }
 .status.notice { color: #8a6500; }
 .status.error { color: #b23a35; }
-.demo-badge {
-  margin-top: 6px;
-  padding: 8px 10px;
-  border-radius: 9px;
-  background: #f3f6f7;
-  color: #78878c;
-  font-size: 10px;
-  text-align: center;
-}
 
 .results-area {
   min-height: 650px;
@@ -301,18 +280,11 @@ button { color: inherit; }
   text-align: center;
   color: var(--muted);
 }
-.empty-index {
-  width: 52px;
-  height: 52px;
-  display: grid;
-  place-items: center;
-  margin: 0 auto 18px;
-  border: 1px solid #bfd0d4;
-  border-radius: 50%;
-  color: var(--blue);
-  font-size: 13px;
-  font-weight: 900;
-  font-size: 22px;
+.empty-logo {
+  width: 150px;
+  height: 142px;
+  margin: 0 auto 20px;
+  object-fit: contain;
 }
 .empty-state h3 {
   margin: 0;

@@ -24,13 +24,6 @@ const WORKPLACES = [
   ['siheung5','시흥5동 주민센터','시흥','서울특별시 금천구 금하로24길 6'],
 ].map(([id,label,group,address]) => ({ id,label,group,address }));
 
-const DEMO_PLACES = [
-  ['d1','청담골 백반','음식점 > 한식 > 백반','korean',140], ['d2','금천국밥','음식점 > 한식 > 국밥','korean',220],
-  ['d3','옛날손칼국수','음식점 > 한식 > 칼국수','korean',310], ['d4','마라공방','음식점 > 중식 > 마라탕','chinese',180],
-  ['d5','홍콩반점 금천점','음식점 > 중식','chinese',360], ['d6','소바정','음식점 > 일식 > 소바','japanese',170],
-  ['d7','카츠하루','음식점 > 일식 > 돈까스','japanese',430], ['d8','오후파스타','음식점 > 양식','western',260],
-  ['d9','우리동네김밥','음식점 > 분식 > 김밥','bunsik',120], ['d10','떡볶이연구소','음식점 > 분식','bunsik',390],
-].map(([id,place_name,category_name,cuisine,distance]) => ({ id,place_name,category_name,cuisine,cuisines:[cuisine],distance:String(distance),road_address_name:'서울 금천구',place_url:'https://map.kakao.com/' }));
 
 const STORAGE = {
   workplace: 'geumcheon-lunch-v2-workplace',
@@ -45,7 +38,6 @@ const state = {
   menus: loadMenus(),
   radius: Number(localStorage.getItem(STORAGE.radius) || 500),
   results: [],
-  demo: false,
   visible: [],
   kakaoReady: false,
   spinning: false,
@@ -271,7 +263,7 @@ function pickThree(items) {
 }
 
 function placeInitial(place) {
-  return String(place.place_name || '?').replace(/\s*\(데모\)\s*/g, '').trim().charAt(0) || '?';
+  return String(place.place_name || '?').trim().charAt(0) || '?';
 }
 
 function cardMarkup(place, index, jackpot = false) {
@@ -285,7 +277,7 @@ function cardMarkup(place, index, jackpot = false) {
       <div class="place-identity">
         <div class="place-avatar" data-cuisine="${escapeAttribute(place.cuisine || 'other')}">${jackpot ? '★' : escapeHtml(placeInitial(place))}</div>
         <div class="place-title">
-          <h3>${escapeHtml((place.place_name || '이름 없는 음식점').replace(/\s*\(데모\)\s*/g, ''))}</h3>
+          <h3>${escapeHtml((place.place_name || '이름 없는 음식점'))}</h3>
           <div class="cuisine-badge">${jackpot ? 'JACKPOT' : escapeHtml(cuisineLabel(place))}</div>
         </div>
       </div>
@@ -418,7 +410,7 @@ function pickFinalRestaurant() {
   const cards = $$('.place-card');
   cards[index]?.classList.add('final-choice');
   const finalPick = $('#finalPick');
-  finalPick.textContent = `오늘의 최종 선택은 “${(selected.place_name || '').replace(/\s*\(데모\)\s*/g, '')}”입니다!`;
+  finalPick.textContent = `오늘의 최종 선택은 “${(selected.place_name || '')}”입니다!`;
   finalPick.classList.remove('hidden');
 }
 
@@ -442,15 +434,11 @@ async function searchPlaces() {
   setStatus('조건에 맞는 음식점을 찾고 있습니다…');
 
   try {
-    if (state.kakaoReady) {
-      const point = await findWorkplacePoint(currentWorkplace().address);
-      state.results = await searchKakaoPlaces(point);
-      state.demo = false;
-    } else {
-      state.results = DEMO_PLACES.filter(place => Number(place.distance) <= state.radius && menuMatches(place));
-      state.demo = true;
+    if (!state.kakaoReady) {
+      throw new Error('카카오 지도 API에 연결되지 않았습니다. 페이지를 새로고침해주세요.');
     }
-    $('#demoBadge').classList.toggle('hidden', !state.demo);
+    const point = await findWorkplacePoint(currentWorkplace().address);
+    state.results = await searchKakaoPlaces(point);
 
     if (!state.results.length) {
       $('#results').innerHTML = '';
@@ -482,9 +470,11 @@ async function init() {
   renderDistance();
   renderWorkplaceOptions();
   state.kakaoReady = await loadKakaoSdk();
-  state.demo = !state.kakaoReady;
-  $('#demoBadge').classList.toggle('hidden', !state.demo);
-  setStatus(state.demo ? 'config.js에 JavaScript 키를 입력하면 실제 음식점을 검색합니다.' : '카카오 지도 연결이 완료되었습니다.', state.demo ? 'notice' : 'success');
+  if (!state.kakaoReady) {
+    setStatus('카카오 지도 API 연결에 실패했습니다. 페이지를 새로고침해주세요.', 'error');
+    return;
+  }
+  setStatus('카카오 지도 연결이 완료되었습니다.', 'success');
 }
 
 $('#workplace').addEventListener('change', event => {

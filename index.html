@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#eef3f5" />
   <title>금천 한끼</title>
-  <meta name="description" content="금천구청과 동주민센터 근무자를 위한 점심 후보 추천 MVP" />
+  <meta name="description" content="금천구청과 동주민센터 근무자를 위한 점심 룰렛" />
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <div class="app-shell">
     <header class="app-header">
       <a class="brand" href="./" aria-label="금천 한끼 홈">
-        <span class="brand-mark" aria-hidden="true"></span>
+        <img class="brand-logo" src="./assets/geumcheon-hankki-logo.png" alt="" />
         <span>금천 한끼</span>
       </a>
-      <div class="header-note">금천구 점심 선택기 <span>MVP</span></div>
+      <div class="header-note">금천구 점심 선택기</div>
     </header>
 
     <main class="workspace">
@@ -68,7 +68,6 @@
         </button>
 
         <div id="status" class="status" aria-live="polite"></div>
-        <div id="demoBadge" class="demo-badge hidden">현재 데모 데이터로 표시 중</div>
       </aside>
 
       <section class="results-area" aria-label="추천 결과">
@@ -81,7 +80,7 @@
         </div>
 
         <div id="emptyState" class="empty-state">
-          <div class="empty-index" aria-hidden="true">↻</div>
+          <img class="empty-logo" src="./assets/geumcheon-hankki-logo.png" alt="" />
           <h3>점심 룰렛을 돌려보세요.</h3>
           <p>왼쪽에서 근무지와 메뉴를 선택한 뒤<br class="desktop-only" /> 점심 후보를 찾아보세요.</p>
         </div>
@@ -96,7 +95,7 @@
     </main>
 
     <footer>
-      <span>금천구 근무자를 위한 점심 선택 MVP</span>
+      <span>금천구 근무자를 위한 점심 선택기</span>
       <span>장소 데이터: Kakao Maps API</span>
     </footer>
   </div>
