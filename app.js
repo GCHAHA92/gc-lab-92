@@ -237,19 +237,29 @@ async function searchKakaoPlaces(point) {
   const searchMenus = state.menus.includes('all')
     ? Object.keys(MENU_SEARCH_TERMS)
     : state.menus;
-  const keywords = [...new Set(searchMenus.flatMap(menu => MENU_SEARCH_TERMS[menu] || []))];
+  const keywordLists = searchMenus.map(menu => MENU_SEARCH_TERMS[menu] || []);
+  const keywords = [];
+  const longestList = Math.max(0, ...keywordLists.map(list => list.length));
+  for (let index = 0; index < longestList; index += 1) {
+    keywordLists.forEach(list => {
+      if (list[index] && !keywords.includes(list[index])) keywords.push(list[index]);
+    });
+  }
 
-  for (const keyword of keywords) {
-    if (found.size >= targetCount) break;
-    const keywordPlaces = new kakao.maps.services.Places();
-    try {
-      await runPagedSearch(callback => keywordPlaces.keywordSearch(keyword, callback, {
-        ...options,
-        category_group_code:'FD6',
-      }), 2);
-    } catch {
-      // 기본 음식점 검색 결과는 유지하고 실패한 보조 검색어만 건너뜁니다.
-    }
+  const batchSize = 5;
+  for (let start = 0; start < keywords.length && found.size < targetCount; start += batchSize) {
+    const batch = keywords.slice(start, start + batchSize);
+    await Promise.all(batch.map(async keyword => {
+      const keywordPlaces = new kakao.maps.services.Places();
+      try {
+        await runPagedSearch(callback => keywordPlaces.keywordSearch(keyword, callback, {
+          ...options,
+          category_group_code:'FD6',
+        }), 2);
+      } catch {
+        // 기본 음식점 검색 결과는 유지하고 실패한 보조 검색어만 건너뜁니다.
+      }
+    }));
   }
 
   return [...found.values()]
