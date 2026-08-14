@@ -446,11 +446,15 @@ button { color: inherit; }
   border: 1px solid rgba(15,118,110,.12);
   overflow: hidden;
 }
-.place-avatar img {
-  width: 100%;
-  height: 100%;
+.cuisine-icon {
+  width: 31px;
+  height: 31px;
   display: block;
-  object-fit: cover;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 .place-avatar[data-cuisine="chinese"] { background: #fff0e8; color: #a24f32; }
 .place-avatar[data-cuisine="japanese"] { background: #fff5dd; color: #936b13; }
