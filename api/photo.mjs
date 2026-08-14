@@ -2,6 +2,7 @@ import { getDatabase, handleOptions, setCors } from './_db.mjs';
 
 const POSITIVE_TTL = 1000 * 60 * 60 * 24 * 30;
 const NEGATIVE_TTL = 1000 * 60 * 60 * 24;
+const CACHE_VERSION = 2;
 
 function normalizeUrl(value) {
   if (typeof value !== 'string') return '';
@@ -11,10 +12,17 @@ function normalizeUrl(value) {
   return /^https:\/\/(?:[^/]+\.)?(?:kakaocdn\.net|daumcdn\.net)\//i.test(url) ? url : '';
 }
 
+function isPhotoUrl(url) {
+  return /kakaomapPhoto\/review\//i.test(url)
+    || /\/mystore\//i.test(url)
+    || /\/cthumb\/local\/[^?]+\?[^#]*fname=/i.test(url)
+    || /\.(?:jpe?g|png|webp)(?:[?#]|$)/i.test(url);
+}
+
 function collectPhotoUrls(value, output = []) {
   if (typeof value === 'string') {
     const normalized = normalizeUrl(value);
-    if (normalized && /(?:photo|review|mystore|image|img)/i.test(normalized)) output.push(normalized);
+    if (normalized && isPhotoUrl(normalized)) output.push(normalized);
     return output;
   }
   if (Array.isArray(value)) {
@@ -49,7 +57,7 @@ async function discoverPhoto(placeId) {
       candidates = collectPhotoUrls(JSON.parse(text));
     } catch {
       const matches = text.match(/https?:\\?\/\\?\/[^"'<>\\s]+/g) || [];
-      candidates = matches.map(normalizeUrl).filter(Boolean);
+      candidates = matches.map(normalizeUrl).filter(candidate => candidate && isPhotoUrl(candidate));
     }
     const best = candidates.find(candidate => /(?:review|mystore|kakaomapPhoto)/i.test(candidate)) || candidates[0];
     if (best) return best;
@@ -77,17 +85,18 @@ export default async function handler(req, res) {
     const db = await getDatabase();
     const photos = db.collection('placePhotos');
     const cached = await photos.findOne({ placeId });
-    const ttl = cached?.url ? POSITIVE_TTL : NEGATIVE_TTL;
-    if (cached && Date.now() - new Date(cached.updatedAt).getTime() < ttl) {
+    const cachedUrl = normalizeUrl(cached?.url || '');
+    const ttl = cachedUrl ? POSITIVE_TTL : NEGATIVE_TTL;
+    if (cached?.version === CACHE_VERSION && Date.now() - new Date(cached.updatedAt).getTime() < ttl) {
       res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
-      res.status(200).json({ url: cached.url || '', cached:true });
+      res.status(200).json({ url: cachedUrl, cached:true });
       return;
     }
 
     const url = await discoverPhoto(placeId);
     await photos.updateOne(
       { placeId },
-      { $set: { placeId, url, updatedAt:new Date() } },
+      { $set: { placeId, url, version:CACHE_VERSION, updatedAt:new Date() } },
       { upsert:true },
     );
     res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
