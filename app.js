@@ -474,7 +474,7 @@ async function init() {
     setStatus('카카오 지도 API 연결에 실패했습니다. 페이지를 새로고침해주세요.', 'error');
     return;
   }
-  setStatus('카카오 지도 연결이 완료되었습니다.', 'success');
+  setStatus('');
 }
 
 $('#workplace').addEventListener('change', event => {
