@@ -10,10 +10,6 @@ const MENU_LABELS = {
   other: '기타',
 };
 
-const PLACE_PHOTOS = {
-  '347052149': 'https://img1.kakaocdn.net/cthumb/local/C544x408.q50/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2F5A5DA4034B4C456196C346248693915B',
-};
-
 const WORKPLACES = [
   ['geumcheon-office','금천구청','구청','서울특별시 금천구 시흥대로73길 70'],
   ['doksan1','독산1동 주민센터','독산','서울특별시 금천구 시흥대로123길 11'],
@@ -266,16 +262,39 @@ function pickThree(items) {
   return picked;
 }
 
-function placeInitial(place) {
-  return String(place.place_name || '?').trim().charAt(0) || '?';
+function cuisineIconMarkup(cuisine = 'other') {
+  const icons = {
+    korean: `
+      <path d="M10 25h28c-1.6 9-6.8 13-14 13S11.6 34 10 25Z"/>
+      <path d="M13 29h22M17 19c-2-3 1-5 0-8M25 19c-2-3 1-5 0-8M33 19c-2-3 1-5 0-8"/>
+    `,
+    chinese: `
+      <path d="M9 31c2-9 7.5-14 15-14s13 5 15 14c-4 5-9 7-15 7S13 36 9 31Z"/>
+      <path d="M15 29c2-4 5-6 9-6s7 2 9 6M18 19l2.5 5M30 19l-2.5 5M24 17v6"/>
+    `,
+    japanese: `
+      <rect x="10" y="17" width="28" height="20" rx="8"/>
+      <path d="M11 24h26M15 18c5 4 13 4 18 0M17 28h14M18 33h12"/>
+    `,
+    western: `
+      <circle cx="24" cy="25" r="13"/>
+      <circle cx="24" cy="25" r="7"/>
+      <path d="M24 18c5 2 5 8 0 9-4 1-5 5-1 7M8 10v8M12 10v8M16 10v8M12 18v20"/>
+    `,
+    bunsik: `
+      <path d="M12 20h24l-2 18H14l-2-18Z"/>
+      <path d="M10 20h28M17 14l4 6M31 12l-5 8"/>
+      <path d="M18 27h5v6h-5zM26 25h5v6h-5z"/>
+    `,
+    other: `
+      <path d="M12 10v11c0 4 3 6 6 6V10M15 10v28M34 10c-5 4-7 10-7 17h7v11M34 10v28"/>
+    `,
+  };
+  return `<svg class="cuisine-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false">${icons[cuisine] || icons.other}</svg>`;
 }
 
 function placeAvatarMarkup(place) {
-  const photoUrl = PLACE_PHOTOS[String(place.id || '')];
-  if (photoUrl) {
-    return `<img src="${escapeAttribute(photoUrl)}" alt="" />`;
-  }
-  return escapeHtml(placeInitial(place));
+  return cuisineIconMarkup(place.cuisine || 'other');
 }
 
 function cardMarkup(place, index, jackpot = false) {
