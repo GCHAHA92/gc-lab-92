@@ -10,6 +10,10 @@ const MENU_LABELS = {
   other: '기타',
 };
 
+const PLACE_PHOTOS = {
+  '347052149': 'https://img1.kakaocdn.net/cthumb/local/C544x408.q50/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2F5A5DA4034B4C456196C346248693915B',
+};
+
 const WORKPLACES = [
   ['geumcheon-office','금천구청','구청','서울특별시 금천구 시흥대로73길 70'],
   ['doksan1','독산1동 주민센터','독산','서울특별시 금천구 시흥대로123길 11'],
@@ -266,6 +270,14 @@ function placeInitial(place) {
   return String(place.place_name || '?').trim().charAt(0) || '?';
 }
 
+function placeAvatarMarkup(place) {
+  const photoUrl = PLACE_PHOTOS[String(place.id || '')];
+  if (photoUrl) {
+    return `<img src="${escapeAttribute(photoUrl)}" alt="" />`;
+  }
+  return escapeHtml(placeInitial(place));
+}
+
 function cardMarkup(place, index, jackpot = false) {
   const mapUrl = place.place_url || 'https://map.kakao.com/';
   const address = place.road_address_name || place.address_name || '주소 정보 없음';
@@ -275,7 +287,7 @@ function cardMarkup(place, index, jackpot = false) {
         <span class="distance">${jackpot ? '1%' : escapeHtml(distanceText(place.distance))}</span>
       </div>
       <div class="place-identity">
-        <div class="place-avatar" data-cuisine="${escapeAttribute(place.cuisine || 'other')}">${jackpot ? '★' : escapeHtml(placeInitial(place))}</div>
+        <div class="place-avatar" data-cuisine="${escapeAttribute(place.cuisine || 'other')}">${jackpot ? '★' : placeAvatarMarkup(place)}</div>
         <div class="place-title">
           <h3>${escapeHtml((place.place_name || '이름 없는 음식점'))}</h3>
           <div class="cuisine-badge">${jackpot ? 'JACKPOT' : escapeHtml(cuisineLabel(place))}</div>
@@ -305,9 +317,8 @@ function reelMarkup(pool, finalPlace, index, jackpot) {
         ${faces.map((place, faceIndex) => {
           const name = jackpot && faceIndex === 0 ? '퇴근해' : (place.place_name || '이름 없는 음식점');
           const cuisine = jackpot && faceIndex === 0 ? 'JACKPOT' : cuisineLabel(place);
-          const initial = jackpot && faceIndex === 0 ? '★' : placeInitial(place);
           return `<div class="reel-face" style="transform:rotateX(${faceIndex * angleStep}deg) translateZ(${radius}px)">
-            <div class="place-avatar" data-cuisine="${escapeAttribute(place.cuisine || 'other')}">${escapeHtml(initial)}</div>
+            <div class="place-avatar" data-cuisine="${escapeAttribute(place.cuisine || 'other')}">${jackpot && faceIndex === 0 ? '★' : placeAvatarMarkup(place)}</div>
             <div class="reel-face-copy">
               <h3>${escapeHtml(name)}</h3>
               <div class="reel-meta">${escapeHtml(cuisine)} · ${jackpot && faceIndex === 0 ? '1%' : escapeHtml(distanceText(place.distance))}</div>
