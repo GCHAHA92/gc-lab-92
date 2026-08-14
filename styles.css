@@ -325,10 +325,10 @@ button { color: inherit; }
 .place-card.reel-card {
   height: 306px;
   padding: 0;
-  border-color: #a8c9c6;
-  background: linear-gradient(180deg, #f9fcfc 0%, #fff 42%, #fff 58%, #f4f9f9 100%);
+  border-color: transparent;
+  background: transparent;
   perspective: 900px;
-  box-shadow: inset 0 18px 30px rgba(24,70,74,.035), inset 0 -18px 30px rgba(24,70,74,.045);
+  box-shadow: none;
 }
 .reel-card::before,
 .reel-card::after {
@@ -361,8 +361,8 @@ button { color: inherit; }
   height: 34%;
   pointer-events: none;
 }
-.reel-window::before { top: 0; background: linear-gradient(#f7fbfb 8%, rgba(247,251,251,.15)); }
-.reel-window::after { bottom: 0; background: linear-gradient(rgba(247,251,251,.1), #f3f8f8 92%); }
+.reel-window::before { top: 0; background: linear-gradient(var(--bg) 8%, rgba(247,251,251,0)); }
+.reel-window::after { bottom: 0; background: linear-gradient(rgba(247,251,251,0), var(--bg) 92%); }
 .reel-stage {
   position: absolute;
   left: 50%;
@@ -397,7 +397,7 @@ button { color: inherit; }
   text-overflow: ellipsis;
 }
 .reel-meta { color: var(--muted); font-size: 10px; font-weight: 750; }
-.reel-card.is-braking { box-shadow: inset 0 18px 30px rgba(24,70,74,.04), inset 0 -18px 30px rgba(24,70,74,.05), 0 0 0 3px rgba(15,118,110,.045); }
+.reel-card.is-braking { box-shadow: none; }
 .place-card.landed { animation: land .38s cubic-bezier(.2,.9,.25,1.25); border-color: #7eb7b1; }
 .place-card.final-choice {
   border-color: #e49a64;
