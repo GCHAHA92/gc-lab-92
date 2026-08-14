@@ -10,6 +10,14 @@ const MENU_LABELS = {
   other: '기타',
 };
 
+const MENU_SEARCH_TERMS = {
+  korean: ['한식', '백반', '국밥', '칼국수'],
+  chinese: ['중식', '짜장면', '짬뽕', '마라탕', '양꼬치'],
+  japanese: ['일식', '초밥', '돈까스', '라멘', '우동'],
+  western: ['양식', '파스타', '피자', '햄버거', '브런치'],
+  bunsik: ['분식', '김밥', '떡볶이'],
+};
+
 const WORKPLACES = [
   ['geumcheon-office','금천구청','구청','서울특별시 금천구 시흥대로73길 70'],
   ['doksan1','독산1동 주민센터','독산','서울특별시 금천구 시흥대로123길 11'],
@@ -185,32 +193,62 @@ function findWorkplacePoint(address) {
   });
 }
 
-function searchKakaoPlaces(point) {
-  return new Promise((resolve, reject) => {
-    const places = new kakao.maps.services.Places();
-    const found = new Map();
+async function searchKakaoPlaces(point) {
+  const found = new Map();
+  const options = {
+    location:new kakao.maps.LatLng(point.lat, point.lng),
+    radius:state.radius,
+    sort:kakao.maps.services.SortBy.DISTANCE,
+  };
+
+  const collect = (data = []) => {
+    data.forEach(item => {
+      const address = `${item.address_name || ''} ${item.road_address_name || ''}`;
+      if (!address.includes('금천구')) return;
+      const cuisines = classifyCuisine(item);
+      const place = { ...item, cuisines, cuisine:cuisines[0] || 'other' };
+      if (menuMatches(place)) found.set(place.id, place);
+    });
+  };
+
+  const runPagedSearch = (startSearch, maxPages) => new Promise((resolve, reject) => {
     let pageCount = 0;
     const callback = (data, status, pagination) => {
-      if (status !== kakao.maps.services.Status.OK && status !== kakao.maps.services.Status.ZERO_RESULT) {
+      if (status === kakao.maps.services.Status.ZERO_RESULT) {
+        resolve();
+        return;
+      }
+      if (status !== kakao.maps.services.Status.OK) {
         reject(new Error('카카오 음식점 검색에 실패했습니다.'));
         return;
       }
-      data.forEach(item => {
-        const address = `${item.address_name || ''} ${item.road_address_name || ''}`;
-        if (!address.includes('금천구')) return;
-        const cuisines = classifyCuisine(item);
-        const place = { ...item, cuisines, cuisine:cuisines[0] || 'other' };
-        if (menuMatches(place)) found.set(place.id, place);
-      });
+      collect(data);
       pageCount += 1;
-      if (pagination?.hasNextPage && pageCount < 3) pagination.nextPage();
-      else resolve([...found.values()].sort((a,b) => Number(a.distance) - Number(b.distance)));
+      if (pagination?.hasNextPage && pageCount < maxPages) pagination.nextPage();
+      else resolve();
     };
-    places.categorySearch('FD6', callback, {
-      location:new kakao.maps.LatLng(point.lat, point.lng), radius:state.radius,
-      sort:kakao.maps.services.SortBy.DISTANCE,
-    });
+    startSearch(callback);
   });
+
+  const categoryPlaces = new kakao.maps.services.Places();
+  await runPagedSearch(callback => categoryPlaces.categorySearch('FD6', callback, options), 5);
+
+  if (!state.menus.includes('all')) {
+    const keywords = [...new Set(state.menus.flatMap(menu => MENU_SEARCH_TERMS[menu] || []))];
+    await Promise.all(keywords.map(async keyword => {
+      const keywordPlaces = new kakao.maps.services.Places();
+      try {
+        await runPagedSearch(callback => keywordPlaces.keywordSearch(keyword, callback, {
+          ...options,
+          category_group_code:'FD6',
+        }), 2);
+      } catch {
+        // 기본 음식점 검색 결과는 유지하고 실패한 보조 검색어만 건너뜁니다.
+      }
+    }));
+  }
+
+  return [...found.values()].sort((a,b) => Number(a.distance) - Number(b.distance));
 }
 
 function cuisineLabel(place) {
