@@ -373,6 +373,15 @@ button { color: inherit; }
   transform: translate(-50%, -50%) rotateX(0deg);
   will-change: transform;
 }
+.reel-stage.is-spinning {
+  animation: reel-spin var(--spin-duration, 2200ms) cubic-bezier(.12,.68,.08,1) forwards;
+}
+
+@keyframes reel-spin {
+  from { transform: translate(-50%, -50%) rotateX(0deg); }
+  to { transform: translate(-50%, -50%) rotateX(var(--spin-end, -1800deg)); }
+}
+
 .reel-face {
   position: absolute;
   inset: 0;
