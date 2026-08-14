@@ -195,6 +195,7 @@ function findWorkplacePoint(address) {
 
 async function searchKakaoPlaces(point) {
   const found = new Map();
+  const targetCount = 100;
   const options = {
     location:new kakao.maps.LatLng(point.lat, point.lng),
     radius:state.radius,
@@ -233,22 +234,27 @@ async function searchKakaoPlaces(point) {
   const categoryPlaces = new kakao.maps.services.Places();
   await runPagedSearch(callback => categoryPlaces.categorySearch('FD6', callback, options), 5);
 
-  if (!state.menus.includes('all')) {
-    const keywords = [...new Set(state.menus.flatMap(menu => MENU_SEARCH_TERMS[menu] || []))];
-    await Promise.all(keywords.map(async keyword => {
-      const keywordPlaces = new kakao.maps.services.Places();
-      try {
-        await runPagedSearch(callback => keywordPlaces.keywordSearch(keyword, callback, {
-          ...options,
-          category_group_code:'FD6',
-        }), 2);
-      } catch {
-        // 기본 음식점 검색 결과는 유지하고 실패한 보조 검색어만 건너뜁니다.
-      }
-    }));
+  const searchMenus = state.menus.includes('all')
+    ? Object.keys(MENU_SEARCH_TERMS)
+    : state.menus;
+  const keywords = [...new Set(searchMenus.flatMap(menu => MENU_SEARCH_TERMS[menu] || []))];
+
+  for (const keyword of keywords) {
+    if (found.size >= targetCount) break;
+    const keywordPlaces = new kakao.maps.services.Places();
+    try {
+      await runPagedSearch(callback => keywordPlaces.keywordSearch(keyword, callback, {
+        ...options,
+        category_group_code:'FD6',
+      }), 2);
+    } catch {
+      // 기본 음식점 검색 결과는 유지하고 실패한 보조 검색어만 건너뜁니다.
+    }
   }
 
-  return [...found.values()].sort((a,b) => Number(a.distance) - Number(b.distance));
+  return [...found.values()]
+    .sort((a,b) => Number(a.distance) - Number(b.distance))
+    .slice(0, targetCount);
 }
 
 function cuisineLabel(place) {
