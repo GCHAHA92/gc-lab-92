@@ -450,16 +450,15 @@ async function spinCard(card, index, pool, finalPlace, duration, jackpot) {
 
   if (!reduceMotion) {
     const turns = 5 + index;
-    const spin = stage.animate([
-      { transform:'translate(-50%, -50%) rotateX(0deg)' },
-      { transform:`translate(-50%, -50%) rotateX(-${turns * 360}deg)` },
-    ], {
-      duration,
-      easing:'cubic-bezier(.12,.68,.08,1)',
-      fill:'forwards',
-    });
+    stage.style.setProperty('--spin-duration', `${duration}ms`);
+    stage.style.setProperty('--spin-end', `-${turns * 360}deg`);
+    void stage.offsetWidth;
+    stage.classList.add('is-spinning');
     window.setTimeout(() => card.classList.add('is-braking'), Math.max(0, duration - 700));
-    await spin.finished;
+    await Promise.race([
+      new Promise(resolve => stage.addEventListener('animationend', resolve, { once:true })),
+      wait(duration + 150),
+    ]);
   } else {
     await wait(80 + index * 70);
   }
