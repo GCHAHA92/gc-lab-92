@@ -40,7 +40,7 @@ body{display:grid;place-items:center}.game{position:relative;width:min(1080px,10
 </main>
 <script>
 (()=>{
-const world=document.querySelector('#world'),game=document.querySelector('#game'),player=document.querySelector('#player'),overlay=document.querySelector('#overlay'),startBtn=document.querySelector('#start'),progressEl=document.querySelector('#progress'),percentEl=document.querySelector('#percent'),bestEl=document.querySelector('#best'),flash=document.querySelector('#flash'),toast=document.querySelector('#toast');
+const world=document.querySelector('#world'),game=document.querySelector('#game'),player=document.querySelector('#player'),overlay=document.querySelector('#overlay'),startBtn=document.querySelector('#start'),progressEl=document.querySelector('#progress'),percentEl=document.querySelector('#percent'),bestEl=document.querySelector('#best'),flash=document.querySelector('#flash'),toast=document.querySelector('#toast'),headline=document.querySelector('#headline'),message=document.querySelector('#message');
 const TOTAL=15000, FLOOR=94, PX=0.12;
 let camera=0,y=0,vy=0,playing=false,dead=false,last=0,raf=0,best=Number(localStorage.getItem('geumnarae-dash-best')||0),nodes=[],holes=[];
 bestEl.textContent='BEST '+best+'%';
