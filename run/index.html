@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#fff7d6" />
+  <title>금나래 퇴근런</title>
+  <style>
+    :root{--ink:#30271d;--yellow:#ffd400;--green:#a8cf00;--pink:#e72b87;--paper:#fffdf7;--line:#eadfca}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,"Noto Sans KR",sans-serif;color:var(--ink);background:#fff7d6}
+    body{display:grid;place-items:center;padding:18px;overflow:hidden}
+    .shell{width:min(980px,100%);background:var(--paper);border:3px solid var(--ink);border-radius:26px;box-shadow:8px 9px 0 var(--ink);overflow:hidden}
+    header{height:70px;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--ink);background:#fff}
+    .title{display:flex;align-items:center;gap:10px;font-weight:1000;font-size:clamp(20px,3vw,30px);letter-spacing:-1.5px}.title-badge{background:var(--yellow);border:2px solid var(--ink);border-radius:14px;padding:7px 11px;transform:rotate(-2deg)}
+    .scores{display:flex;gap:8px;font-weight:900;font-size:14px}.scorebox{min-width:84px;padding:7px 10px;text-align:center;border:2px solid var(--ink);border-radius:12px;background:#fff}.scorebox b{display:block;font-size:20px}
+    .stage{position:relative;height:min(58vh,500px);min-height:340px;overflow:hidden;background:linear-gradient(#c9f1ff 0 62%,#fff2b8 62% 100%);touch-action:manipulation;user-select:none}
+    .sun{position:absolute;right:8%;top:8%;width:62px;height:62px;border-radius:50%;background:var(--yellow);box-shadow:0 0 0 8px #fff3a8}
+    .cloud,.cloud:before,.cloud:after{position:absolute;background:white;border:2px solid var(--ink);border-radius:999px}.cloud{width:92px;height:28px;top:22%;left:13%;opacity:.92}.cloud:before{content:"";width:39px;height:39px;left:14px;bottom:-2px}.cloud:after{content:"";width:48px;height:48px;right:8px;bottom:-2px}
+    .office{position:absolute;right:5%;bottom:74px;width:150px;height:175px;background:#e9edf0;border:3px solid var(--ink);opacity:.72}.office:after{content:"";position:absolute;inset:18px;background:repeating-linear-gradient(90deg,#8ec7df 0 22px,transparent 22px 34px),repeating-linear-gradient(0deg,transparent 0 25px,var(--ink) 25px 28px)}
+    .ground{position:absolute;left:0;right:0;bottom:0;height:76px;background:#e4bb69;border-top:4px solid var(--ink)}.ground:after{content:"";position:absolute;inset:16px 0;background:repeating-linear-gradient(90deg,transparent 0 50px,#be9147 50px 62px);animation:road .7s linear infinite}
+    @keyframes road{to{transform:translateX(-62px)}}
+    .player{position:absolute;left:10%;bottom:65px;width:92px;height:92px;object-fit:contain;filter:drop-shadow(3px 5px 0 rgba(48,39,29,.22));z-index:4;will-change:transform}
+    .player.running{animation:bob .24s ease-in-out infinite alternate}.player.hit{filter:grayscale(1) drop-shadow(3px 5px 0 rgba(48,39,29,.22))}
+    @keyframes bob{to{margin-bottom:5px;transform:rotate(-2deg)}}
+    .obstacle,.item{position:absolute;bottom:72px;z-index:3;display:grid;place-items:center;will-change:transform}
+    .obstacle{border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);font-weight:1000}.phone{width:54px;height:57px;border-radius:12px;background:#ff6868;font-size:31px}.docs{width:64px;height:55px;background:#fff;border-radius:5px;font-size:15px;transform:rotate(-3deg)}.meeting{width:80px;height:66px;background:var(--pink);color:#fff;border-radius:12px;text-align:center;font-size:16px;line-height:1.05}
+    .item{width:52px;height:52px;border:3px solid var(--ink);border-radius:50%;background:#fff;box-shadow:3px 3px 0 var(--ink);font-size:26px;animation:float .55s ease-in-out infinite alternate}.item small{position:absolute;top:51px;white-space:nowrap;padding:2px 5px;border-radius:6px;background:var(--ink);color:#fff;font-size:10px;font-weight:900}@keyframes float{to{margin-bottom:7px}}
+    .toast{position:absolute;top:18px;left:50%;z-index:9;transform:translate(-50%,-80px);padding:10px 15px;border:3px solid var(--ink);border-radius:999px;background:var(--yellow);font-weight:1000;transition:.25s}.toast.show{transform:translate(-50%,0)}
+    .overlay{position:absolute;inset:0;z-index:10;display:grid;place-items:center;padding:24px;background:rgba(255,253,247,.84);backdrop-filter:blur(3px)}.overlay.hidden{display:none}.card{width:min(470px,100%);padding:25px;text-align:center;background:#fff;border:3px solid var(--ink);border-radius:22px;box-shadow:7px 7px 0 var(--ink)}.card h1{margin:0 0 10px;font-size:clamp(29px,6vw,47px);line-height:1}.card p{margin:8px 0 18px;line-height:1.55;font-weight:700}.card .keys{display:inline-block;padding:7px 11px;margin-bottom:16px;border:2px dashed var(--ink);border-radius:10px;background:#fff9d9;font-size:13px}
+    button{border:3px solid var(--ink);border-radius:14px;background:var(--yellow);color:var(--ink);padding:12px 22px;box-shadow:4px 4px 0 var(--ink);font-size:18px;font-weight:1000;cursor:pointer}button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+    footer{padding:10px 16px;text-align:center;background:#fff;font-size:12px;font-weight:800;border-top:3px solid var(--ink)}
+    @media(max-width:600px){body{padding:0}.shell{height:100dvh;border:0;border-radius:0;box-shadow:none}.stage{height:calc(100dvh - 130px);min-height:0}.player{width:72px;height:72px;left:8%}.office{width:105px;height:145px}.scores{gap:4px}.scorebox{min-width:67px;padding:5px;font-size:11px}.scorebox b{font-size:17px}.title-badge{font-size:19px}.obstacle,.item{bottom:72px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div class="title"><span class="title-badge">금나래</span> 퇴근런</div>
+      <div class="scores">
+        <div class="scorebox">점수<b id="score">0</b></div>
+        <div class="scorebox">최고<b id="best">0</b></div>
+      </div>
+    </header>
+    <section class="stage" id="stage" aria-label="금나래 퇴근런 게임">
+      <div class="sun"></div><div class="cloud"></div><div class="office"></div>
+      <div class="toast" id="toast"></div>
+      <img class="player" id="player" src="../assets/geumcheon-hankki-logo.png" alt="달리는 금나래" />
+      <div class="ground"></div>
+      <div class="overlay" id="overlay">
+        <div class="card">
+          <h1 id="headline">칼퇴를 사수하라!</h1>
+          <p id="message">전화·결재서류·긴급회의를 뛰어넘고<br>무사히 퇴근하세요.</p>
+          <div class="keys">SPACE · ↑ · 화면 터치로 점프</div><br>
+          <button id="startBtn" type="button">업무 시작</button>
+        </div>
+      </div>
+    </section>
+    <footer>☕ 커피 +200 · 🕐 반차 +350 · 🎫 칼퇴권 +500</footer>
+  </main>
+  <script>
+    (() => {
+      const stage = document.querySelector('#stage');
+      const player = document.querySelector('#player');
+      const overlay = document.querySelector('#overlay');
+      const startBtn = document.querySelector('#startBtn');
+      const headline = document.querySelector('#headline');
+      const message = document.querySelector('#message');
+      const scoreEl = document.querySelector('#score');
+      const bestEl = document.querySelector('#best');
+      const toast = document.querySelector('#toast');
+      let playing=false, y=0, vy=0, score=0, speed=330, nextSpawn=0, last=0, raf=0, entities=[];
+      let best=Number(localStorage.getItem('geumnarae-run-best')||0); bestEl.textContent=best;
+      const types=[
+        {cls:'phone',html:'☎',w:54,h:57},
+        {cls:'docs',html:'결재<br>서류',w:64,h:55},
+        {cls:'meeting',html:'긴급<br>회의',w:80,h:66}
+      ];
+      const items=[
+        {icon:'☕',name:'커피 충전!',points:200},
+        {icon:'🕐',name:'반차 획득!',points:350},
+        {icon:'🎫',name:'칼퇴권!',points:500}
+      ];
+      function clearEntities(){entities.forEach(e=>e.el.remove());entities=[]}
+      function start(){
+        clearEntities();playing=true;y=0;vy=0;score=0;speed=330;nextSpawn=700;last=performance.now();
+        scoreEl.textContent='0';overlay.classList.add('hidden');player.classList.remove('hit');player.classList.add('running');
+        if(Math.random()<.01){score=1000;showToast('🎰 1% 잭팟! 오늘은 퇴근해!')}
+        cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
+      }
+      function jump(){
+        if(!playing){start();return}
+        if(y<=2){vy=690;player.classList.remove('running')}
+      }
+      function spawn(){
+        const isItem=Math.random()<.19;
+        if(isItem){
+          const data=items[Math.floor(Math.random()*items.length)],el=document.createElement('div');
+          el.className='item';el.innerHTML=data.icon+'<small>'+data.name.replace('!','')+'</small>';stage.append(el);
+          entities.push({el,x:stage.clientWidth+30,w:52,h:52,item:true,data,air:Math.random()<.5?78:125});
+        }else{
+          const data=types[Math.floor(Math.random()*types.length)],el=document.createElement('div');
+          el.className='obstacle '+data.cls;el.innerHTML=data.html;stage.append(el);
+          entities.push({el,x:stage.clientWidth+30,w:data.w,h:data.h,item:false,data,air:0});
+        }
+      }
+      function showToast(text){toast.textContent=text;toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1100)}
+      function overlap(a,b,pad=9){return a.left+pad<b.right-pad&&a.right-pad>b.left+pad&&a.top+pad<b.bottom-pad&&a.bottom-pad>b.top+pad}
+      function end(){
+        playing=false;cancelAnimationFrame(raf);player.classList.remove('running');player.classList.add('hit');
+        const final=Math.floor(score);if(final>best){best=final;localStorage.setItem('geumnarae-run-best',best);bestEl.textContent=best}
+        headline.textContent='퇴근이 보류되었습니다';
+        message.innerHTML='오늘의 기록 <strong>'+final+'점</strong><br>상사의 호출을 피해서 다시 달려보세요.';
+        startBtn.textContent='다시 도전';overlay.classList.remove('hidden');
+      }
+      function loop(now){
+        if(!playing)return;
+        const dt=Math.min((now-last)/1000,.034);last=now;
+        score+=dt*60;speed=Math.min(610,330+score*.055);scoreEl.textContent=Math.floor(score);
+        vy-=1850*dt;y=Math.max(0,y+vy*dt);if(y===0){vy=0;player.classList.add('running')}
+        player.style.transform='translateY('+(-y)+'px)';
+        nextSpawn-=dt*1000;if(nextSpawn<=0){spawn();nextSpawn=980+Math.random()*750-(speed-330)*.45}
+        const p=player.getBoundingClientRect();
+        for(let i=entities.length-1;i>=0;i--){
+          const e=entities[i];e.x-=speed*dt;e.el.style.transform='translateX('+e.x+'px) translateY('+(-e.air)+'px)';
+          const r=e.el.getBoundingClientRect();
+          if(overlap(p,r,e.item?5:10)){
+            if(e.item){score+=e.data.points;showToast(e.data.name+' +'+e.data.points);e.el.remove();entities.splice(i,1);continue}
+            end();return;
+          }
+          if(r.right<0){e.el.remove();entities.splice(i,1)}
+        }
+        raf=requestAnimationFrame(loop);
+      }
+      startBtn.addEventListener('click',start);
+      stage.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;jump()});
+      addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();jump()}});
+    })();
+  </script>
+</body>
+</html>
