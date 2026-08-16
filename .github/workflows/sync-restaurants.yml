@@ -1,0 +1,49 @@
+name: Sync public restaurant metadata
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 21 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-restaurants
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Export approved public fields
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          MONGODB_DB: geumcheon-lunch
+          MONGODB_COLLECTION: restaurants
+        run: node scripts/export-restaurants.mjs
+
+      - name: Commit updated public data
+        run: |
+          if git diff --quiet -- data/restaurants.json; then
+            echo "No restaurant data changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/restaurants.json
+          git commit -m "Update public restaurant metadata"
+          git push
