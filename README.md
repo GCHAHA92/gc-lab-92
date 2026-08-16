@@ -1,11 +1,37 @@
-# 금천 한끼
+# GC LAB 92
 
-금천구청 및 동주민센터 주변 점심 식당을 카카오맵으로 검색하고 룰렛으로 추천하는 웹 앱입니다.
+업무와 일상을 조금 편하게 만드는 개인 실험용 웹 도구 모음입니다.
 
-## Vercel 환경변수
+## 서비스
 
-- `MONGODB_URI`: MongoDB Atlas 연결 문자열
-- `MONGODB_DB`: 데이터베이스 이름(기본값 `geumcheonLunch`)
-- `ALLOWED_ORIGIN`: 허용할 웹 주소. Vercel에서 같은 도메인으로 운영하면 `*` 또는 배포 주소를 사용합니다.
+- **금천한끼**: 카카오맵 음식점 검색 및 점심 룰렛
+- **출장여비 검증**: 엑셀 파일을 브라우저 안에서 검사하고 결과 엑셀 생성
+- **퇴근 대시**: 보관 중인 미니게임 실험
 
-MongoDB 접속 문자열이나 비밀번호는 `config.js` 또는 GitHub 저장소에 넣지 않습니다.
+## 운영 구조
+
+- 화면: GitHub Pages
+- 식당 보완자료: MongoDB Atlas
+- 데이터 동기화: GitHub Actions
+- 카카오 장소 검색: Kakao Maps JavaScript SDK
+
+출장여비 검증 파일은 사용자의 브라우저 안에서만 처리되며 외부 서버로 전송하거나 저장하지 않습니다.
+
+## 폴더
+
+- `/index.html`: 금천한끼
+- `/lab/`: GC LAB 92 포털
+- `/lab/travel/`: 출장여비 검증
+- `/run/`: 퇴근 대시
+- `/data/`: 공개 가능한 식당 보완자료
+- `/scripts/`: MongoDB 공개자료 변환
+- `/.github/workflows/`: 정기 동기화
+
+## 환경설정
+
+- `config.js`: 카카오 JavaScript 키
+- GitHub Actions Secret `MONGODB_URI`: MongoDB Atlas 연결 문자열
+
+MongoDB 비밀번호와 연결 문자열은 코드 또는 `config.js`에 입력하지 않습니다.
+
+> 본 저장소의 서비스는 개인적으로 제작한 비공식 실험 서비스입니다.
