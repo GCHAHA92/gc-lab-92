@@ -7,13 +7,7 @@ if (!uri) throw new Error('MONGODB_URI secret is not configured.');
 const dbName = process.env.MONGODB_DB || 'geumcheon-lunch';
 const collectionName = process.env.MONGODB_COLLECTION || 'restaurants';
 const client = new MongoClient(uri, { serverSelectionTimeoutMS: 15000 });
-
 const text = value => (typeof value === 'string' ? value.trim() : '');
-const number = value => {
-  const parsed = Number(value);
-  return Number.isFinite(parsed) ? parsed : undefined;
-};
-const boolean = value => (typeof value === 'boolean' ? value : undefined);
 
 function publicRestaurant(document) {
   const placeId = text(document.placeId) || text(document.id) || text(document.kakaoPlaceId);
@@ -21,20 +15,12 @@ function publicRestaurant(document) {
 
   const item = {
     placeId,
-    name: text(document.name) || text(document.place_name),
-    category: text(document.category) || text(document.category_name),
     cuisine: text(document.cuisine),
     cuisines: Array.isArray(document.cuisines) ? document.cuisines.filter(v => typeof v === 'string') : undefined,
-    address: text(document.address) || text(document.address_name),
-    roadAddress: text(document.roadAddress) || text(document.road_address_name),
-    phone: text(document.phone),
-    placeUrl: text(document.placeUrl) || text(document.place_url),
     imageUrl: text(document.imageUrl) || text(document.photoUrl) || text(document.url),
     closedDays: Array.isArray(document.closedDays) ? document.closedDays.filter(v => typeof v === 'string') : undefined,
     businessHours: text(document.businessHours),
-    paymentAmount: number(document.paymentAmount ?? document.amount),
-    weight: number(document.weight),
-    excluded: boolean(document.excluded),
+    excluded: typeof document.excluded === 'boolean' ? document.excluded : undefined,
   };
 
   return Object.fromEntries(Object.entries(item).filter(([, value]) =>
@@ -45,21 +31,19 @@ function publicRestaurant(document) {
 try {
   await client.connect();
   const documents = await client.db(dbName).collection(collectionName)
-    .find({}, { projection: { _id: 0 } })
-    .sort({ paymentAmount: -1, amount: -1, name: 1 })
+    .find({}, { projection: { _id: 0, placeId: 1, id: 1, kakaoPlaceId: 1, cuisine: 1, cuisines: 1, imageUrl: 1, photoUrl: 1, url: 1, closedDays: 1, businessHours: 1, excluded: 1 } })
     .toArray();
 
   const restaurants = documents.map(publicRestaurant).filter(Boolean);
   const payload = {
     generatedAt: new Date().toISOString(),
-    source: 'MongoDB Atlas',
     count: restaurants.length,
     restaurants,
   };
 
   await mkdir('data', { recursive: true });
   await writeFile('data/restaurants.json', JSON.stringify(payload, null, 2) + '\n', 'utf8');
-  console.log(`Exported ${restaurants.length} restaurants from ${dbName}.${collectionName}`);
+  console.log(`Exported ${restaurants.length} public restaurant records.`);
 } finally {
   await client.close();
 }
