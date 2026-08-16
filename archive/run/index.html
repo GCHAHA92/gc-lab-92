@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#161225"><title>금나래 퇴근 대시</title>
+<style>
+:root{--ink:#282035;--yellow:#ffd400;--pink:#ef2a86;--green:#aed000;--sky:#8ae0ff}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:Arial,"Noto Sans KR",sans-serif;background:#161225;color:#fff;overflow:hidden}
+body{display:grid;place-items:center}.game{position:relative;width:min(1080px,100%);height:min(680px,100dvh);overflow:hidden;background:var(--sky);border:4px solid #fff;border-radius:22px;box-shadow:0 0 0 5px #282035}
+.hud{position:absolute;z-index:30;left:0;right:0;top:0;height:76px;padding:13px 18px;display:flex;align-items:center;gap:14px;background:linear-gradient(#161225e8,#16122500);pointer-events:none}
+.logo{font-size:clamp(18px,3vw,28px);font-weight:1000;white-space:nowrap;text-shadow:3px 3px 0 #000}.logo i{font-style:normal;color:var(--yellow)}
+.progress-wrap{height:20px;flex:1;border:3px solid #fff;border-radius:99px;background:#242037;overflow:hidden;box-shadow:3px 3px 0 #000}.progress{height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--yellow),var(--pink));transition:width .08s linear}
+.percent{width:55px;text-align:right;font-size:19px;font-weight:1000;text-shadow:2px 2px #000}
+.best{position:absolute;right:18px;top:54px;font-size:12px;font-weight:900}
+.world{position:absolute;inset:0;overflow:hidden;background:linear-gradient(#53c7f2 0 66%,#ffdc75 66%);transition:background .45s}
+.world.phase2{background:linear-gradient(#9c78ed 0 66%,#ff9fc3 66%)}.world.phase3{background:linear-gradient(#ff865e 0 66%,#ffc45f 66%)}.world.phase4{background:linear-gradient(#19284f 0 66%,#7355b8 66%)}
+.city{position:absolute;left:0;right:0;bottom:91px;height:220px;opacity:.23;background:repeating-linear-gradient(90deg,#15213e 0 90px,transparent 90px 115px);clip-path:polygon(0 45%,8% 45%,8% 10%,17% 10%,17% 60%,23% 60%,23% 28%,35% 28%,35% 52%,42% 52%,42% 0,53% 0,53% 58%,61% 58%,61% 20%,72% 20%,72% 65%,80% 65%,80% 35%,91% 35%,91% 50%,100% 50%,100% 100%,0 100%)}
+.ground{position:absolute;left:0;right:0;bottom:0;height:94px;background:#383148;border-top:5px solid #fff;overflow:hidden}.ground:after{content:"";position:absolute;inset:17px 0;background:repeating-linear-gradient(135deg,#504861 0 22px,#383148 22px 44px);animation:road .45s linear infinite}
+@keyframes road{to{transform:translateX(-62px)}}
+.player{position:absolute;z-index:10;left:12%;bottom:80px;width:96px;height:96px;object-fit:contain;filter:drop-shadow(4px 5px 0 #15102066);transform-origin:center;will-change:transform}.player.air{filter:drop-shadow(0 0 12px #fff)}.player.dead{filter:grayscale(1);opacity:.6}
+.entity{position:absolute;z-index:8;bottom:94px;will-change:transform}.spike{width:42px;height:48px;background:#fff;border:4px solid var(--ink);clip-path:polygon(50% 0,100% 100%,0 100%);filter:drop-shadow(4px 4px 0 #282035)}.spike.pink{background:var(--pink)}
+.block{display:grid;place-items:center;width:62px;height:62px;border:4px solid var(--ink);background:#fff6ca;color:var(--ink);font-size:13px;font-weight:1000;text-align:center;box-shadow:5px 5px 0 var(--ink);transform:rotate(-2deg)}.phone{width:55px;height:65px;border-radius:12px;background:#ff625f;font-size:29px}
+.pad{width:62px;height:17px;border:4px solid var(--ink);border-radius:50% 50% 8px 8px;background:var(--yellow);box-shadow:0 5px 0 var(--pink)}.pad:after{content:"☕";position:absolute;left:16px;bottom:9px;font-size:25px}
+.portal{width:34px;height:115px;border:7px solid var(--yellow);border-radius:50%;box-shadow:0 0 18px var(--yellow),inset 0 0 13px var(--yellow);animation:pulse .4s alternate infinite}@keyframes pulse{to{filter:brightness(1.6);transform:scale(1.06)}}
+.hole{position:absolute;z-index:7;bottom:0;height:99px;background:#161225;border-left:4px solid #fff;border-right:4px solid #fff}.hole:after{content:"야근";position:absolute;left:50%;top:22px;transform:translateX(-50%);color:#ff668f;font-weight:1000;font-size:14px}
+.flash{position:absolute;z-index:40;inset:0;display:grid;place-items:center;pointer-events:none;opacity:0;background:#ef2a86;color:#fff;font-size:clamp(34px,8vw,74px);font-weight:1000;text-align:center;text-shadow:5px 5px #282035}.flash.on{animation:die .7s ease both}@keyframes die{15%,65%{opacity:.93}100%{opacity:0}}
+.toast{position:absolute;z-index:35;left:50%;top:92px;transform:translate(-50%,-90px);padding:9px 16px;border:3px solid var(--ink);border-radius:99px;background:var(--yellow);color:var(--ink);font-weight:1000;box-shadow:4px 4px var(--ink);transition:.25s}.toast.on{transform:translate(-50%,0)}
+.overlay{position:absolute;z-index:50;inset:0;display:grid;place-items:center;padding:20px;background:#161225d9;backdrop-filter:blur(5px)}.overlay.hidden{display:none}.card{width:min(520px,100%);padding:28px;text-align:center;border:4px solid #fff;border-radius:22px;background:#282035;box-shadow:9px 9px 0 #000}.card h1{margin:0 0 10px;color:var(--yellow);font-size:clamp(34px,7vw,58px);line-height:1;transform:rotate(-2deg);text-shadow:4px 4px #000}.card p{font-weight:800;line-height:1.6}.tip{display:inline-block;margin:7px 0 18px;padding:8px 12px;border:2px dashed #fff;border-radius:10px;color:#fff;font-size:13px}.card button{padding:13px 25px;border:4px solid #fff;border-radius:13px;background:var(--pink);color:#fff;font-size:19px;font-weight:1000;box-shadow:5px 5px 0 #000;cursor:pointer}.card button:active{transform:translate(4px,4px);box-shadow:1px 1px #000}
+.checkpoint{position:absolute;z-index:5;bottom:94px;height:230px;width:4px;background:#ffffff55}.checkpoint span{position:absolute;top:5px;left:8px;white-space:nowrap;font-weight:1000;color:#fff;text-shadow:2px 2px #282035}
+@media(max-width:650px){.game{height:100dvh;border:0;border-radius:0;box-shadow:none}.hud{padding:10px}.logo{font-size:17px}.best{right:10px}.player{left:9%;width:74px;height:74px;bottom:84px}.progress-wrap{height:17px}.percent{font-size:15px;width:42px}.block{width:55px;height:55px}.phone{width:49px;height:59px}.world{background:linear-gradient(#53c7f2 0 72%,#ffdc75 72%)}}
+</style>
+</head>
+<body>
+<main class="game" id="game">
+  <div class="world" id="world"><div class="city"></div><div class="ground"></div></div>
+  <div class="hud"><div class="logo"><i>금나래</i> 퇴근 대시</div><div class="progress-wrap"><div class="progress" id="progress"></div></div><div class="percent" id="percent">0%</div><div class="best" id="best">BEST 0%</div></div>
+  <img class="player" id="player" src="../../assets/geumcheon-hankki-logo.png" alt="금나래">
+  <div class="toast" id="toast"></div><div class="flash" id="flash"></div>
+  <div class="overlay" id="overlay"><div class="card"><h1 id="headline">퇴근 대시</h1><p id="message">정해진 업무 패턴을 외워서<br>청사 밖까지 탈출하세요!</p><div class="tip">SPACE · ↑ · 화면 터치<br>커피 발판은 자동으로 높이 점프!</div><br><button id="start">칼퇴 도전</button></div></div>
+</main>
+<script>
+(()=>{
+const world=document.querySelector('#world'),game=document.querySelector('#game'),player=document.querySelector('#player'),overlay=document.querySelector('#overlay'),startBtn=document.querySelector('#start'),progressEl=document.querySelector('#progress'),percentEl=document.querySelector('#percent'),bestEl=document.querySelector('#best'),flash=document.querySelector('#flash'),toast=document.querySelector('#toast'),headline=document.querySelector('#headline'),message=document.querySelector('#message');
+const TOTAL=15000, FLOOR=94, PX=0.12;
+let camera=0,y=0,vy=0,playing=false,dead=false,last=0,raf=0,best=Number(localStorage.getItem('geumnarae-dash-best')||0),nodes=[],holes=[];
+bestEl.textContent='BEST '+best+'%';
+const level=[
+ ['spike',900],['spike',1320],['phone',1800],['spike',2260],['spike',2310],['block',2780],
+ ['spike',3350],['phone',3800],['spike',4250],['spike',4300],['spike',4350],
+ ['pad',4820],['block',5010],['spike',5300],['hole',5740,145],['phone',6230],
+ ['spike',6650],['block',6710],['spike',7190],['spike',7240],['hole',7650,170],
+ ['pad',8100],['block',8300],['block',8370],['spike',8730],['phone',9140],
+ ['hole',9540,190],['spike',10000],['spike',10050],['phone',10520],['portal',10950],
+ ['spike',11300],['block',11370],['spike',11800],['spike',11850],['spike',11900],
+ ['pad',12320],['hole',12530,185],['phone',13000],['spike',13400],['block',13460],
+ ['hole',13910,180],['spike',14300],['spike',14350]
+];
+const marks=[[3750,'오전업무'],[7500,'점심직전'],[11250,'퇴근직전']];
+function makeLevel(){
+ nodes.forEach(n=>n.el.remove());nodes=[];holes=[];
+ level.forEach(([type,x,w])=>{
+  const el=document.createElement('div');
+  if(type==='hole'){el.className='hole';el.style.width=(w||150)+'px';world.append(el);nodes.push({type,x,w:w||150,h:99,el});holes.push([x,x+(w||150)]);return}
+  el.className='entity '+type+(type==='spike'&&x>11000?' pink':'');
+  if(type==='block')el.innerHTML='결재<br>서류';if(type==='phone')el.textContent='☎';
+  world.append(el);const dims={spike:[42,48],block:[62,62],phone:[55,65],pad:[62,17],portal:[34,115]}[type];nodes.push({type,x,w:dims[0],h:dims[1],el});
+ });
+ marks.forEach(([x,label])=>{const el=document.createElement('div');el.className='checkpoint';el.innerHTML='<span>'+label+'</span>';world.append(el);nodes.push({type:'mark',x,w:4,h:230,el})});
+}
+function speed(){const p=camera/TOTAL;return p<.25?350:p<.5?390:p<.75?430:475}
+function start(){
+ makeLevel();camera=0;y=0;vy=0;dead=false;playing=true;last=performance.now();overlay.classList.add('hidden');player.classList.remove('dead','air');world.className='world';updateHud(0);cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);
+}
+function jump(){if(!playing||dead)return;if(y<=3){vy=700;player.classList.add('air')}}
+function updateHud(p){const n=Math.min(100,Math.floor(p*100));progressEl.style.width=n+'%';percentEl.textContent=n+'%';if(n>best){best=n;bestEl.textContent='BEST '+best+'%';localStorage.setItem('geumnarae-dash-best',best)}}
+function pop(text){toast.textContent=text;toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),900)}
+function die(){
+ if(dead)return;dead=true;playing=false;player.classList.add('dead');flash.textContent='퇴근 보류!';flash.classList.remove('on');void flash.offsetWidth;flash.classList.add('on');setTimeout(start,720);
+}
+function rectHit(a,b,p=8){return a.left+p<b.right-p&&a.right-p>b.left+p&&a.top+p<b.bottom-p&&a.bottom-p>b.top+p}
+function phase(p){world.className='world'+(p>=.75?' phase4':p>=.5?' phase3':p>=.25?' phase2':'')}
+function loop(now){
+ if(!playing)return;const dt=Math.min((now-last)/1000,.032);last=now;camera+=speed()*dt;const p=camera/TOTAL;phase(p);updateHud(p);
+ vy-=1900*dt;y+=vy*dt;if(y<=0){y=0;vy=0;player.classList.remove('air')}
+ player.style.transform='translateY('+(-y)+'px) rotate('+(y>0?Math.min(16,vy*.018):0)+'deg)';
+ const playerWorld=camera+game.clientWidth*(innerWidth<=650?.09:.12)+player.clientWidth*.5;
+ let overHole=false;for(const [a,b] of holes)if(playerWorld>a&&playerWorld<b)overHole=true;
+ if(overHole&&y<4){y=-12;die();return}
+ const scale=game.clientWidth/1080;const pp=player.getBoundingClientRect();
+ for(const n of nodes){
+  const sx=(n.x-camera)*scale;n.el.style.transform='translateX('+sx+'px)';
+  if(sx<-250||sx>game.clientWidth+150)continue;
+  if(n.type==='hole'||n.type==='mark')continue;
+  const r=n.el.getBoundingClientRect();
+  if(n.type==='pad'){
+   if(vy<=0&&rectHit(pp,r,2)){vy=860;y=Math.max(y,8);player.classList.add('air');pop('☕ 카페인 점프!')}
+  }else if(n.type==='portal'){
+   if(rectHit(pp,r,3)){n.el.style.opacity=0;pop('⚡ 퇴근 속도 상승!')}
+  }else if(rectHit(pp,r,n.type==='spike'?10:8)){die();return}
+ }
+ if(camera>=TOTAL){win();return}raf=requestAnimationFrame(loop);
+}
+function win(){playing=false;updateHud(1);headline.textContent='칼퇴 성공!';message.innerHTML='업무 패턴 완벽 회피 🎉<br>오늘은 진짜 집에 가세요.';startBtn.textContent='한 번 더';overlay.classList.remove('hidden');pop('🎫 청사 탈출 완료!')}
+startBtn.addEventListener('click',start);
+game.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;jump()});
+addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();overlay.classList.contains('hidden')?jump():start()}});
+makeLevel();
+})();
+</script>
+</body></html>
