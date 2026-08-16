@@ -56,6 +56,24 @@ button { color: inherit; }
   object-fit: contain;
   flex: 0 0 46px;
 }
+.lab-close {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  margin-left: auto;
+  border: 1px solid #d8e1e4;
+  border-radius: 12px;
+  background: rgba(255,255,255,.88);
+  color: #5f6b70;
+  text-decoration: none;
+  font: 500 25px/1 Arial, sans-serif;
+  box-shadow: 0 5px 16px rgba(28,48,55,.08);
+  transition: transform .16s ease, background .16s ease, color .16s ease;
+}
+.lab-close:hover { transform: translateY(-1px); background: #fff; color: #172126; }
+.lab-close:active { transform: translateY(1px); }
+
 
 .header-note {
   color: var(--muted);
