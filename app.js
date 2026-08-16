@@ -60,7 +60,42 @@ const state = {
   visible: [],
   kakaoReady: false,
   spinning: false,
+  restaurantMetadata: new Map(),
 };
+
+async function loadRestaurantMetadata() {
+  try {
+    const response = await fetch('./data/restaurants.json', { cache: 'no-cache' });
+    if (!response.ok) return;
+    const payload = await response.json();
+    const items = Array.isArray(payload.restaurants) ? payload.restaurants : [];
+    state.restaurantMetadata = new Map(
+      items.filter(item => item?.placeId).map(item => [String(item.placeId), item])
+    );
+  } catch {
+    state.restaurantMetadata = new Map();
+  }
+}
+
+function enrichRestaurantMetadata(items) {
+  return items
+    .map(place => {
+      const metadata = state.restaurantMetadata.get(String(place.id));
+      if (!metadata) return place;
+      return {
+        ...place,
+        cuisine: metadata.cuisine || place.cuisine,
+        cuisines: Array.isArray(metadata.cuisines) && metadata.cuisines.length
+          ? metadata.cuisines
+          : place.cuisines,
+        imageUrl: metadata.imageUrl || '',
+        closedDays: metadata.closedDays || [],
+        businessHours: metadata.businessHours || '',
+        excluded: metadata.excluded === true,
+      };
+    })
+    .filter(place => !place.excluded);
+}
 
 function loadMenus() {
   try {
@@ -377,7 +412,7 @@ const MANUAL_PHOTOS = {
 };
 
 async function loadPlacePhoto(place) {
-  const url = MANUAL_PHOTOS[String(place.id)] || '';
+  const url = place.imageUrl || MANUAL_PHOTOS[String(place.id)] || '';
   if (!url) return;
   const card = document.querySelector(`.place-card[data-place-id="${CSS.escape(String(place.id))}"]`);
   const avatar = card?.querySelector('.place-avatar');
@@ -563,7 +598,7 @@ async function searchPlaces() {
       throw new Error('카카오 지도 API에 연결되지 않았습니다. 페이지를 새로고침해주세요.');
     }
     const point = await findWorkplacePoint(currentWorkplace().address);
-    state.results = await searchKakaoPlaces(point);
+    state.results = enrichRestaurantMetadata(await searchKakaoPlaces(point));
 
     if (!state.results.length) {
       $('#results').innerHTML = '';
@@ -591,6 +626,7 @@ async function searchPlaces() {
 }
 
 async function init() {
+  await loadRestaurantMetadata();
   renderMenus();
   renderDistance();
   renderWorkplaceOptions();
