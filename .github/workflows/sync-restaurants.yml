@@ -31,8 +31,8 @@ jobs:
       - name: Export approved public fields
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          MONGODB_DB: geumcheon-lunch
-          MONGODB_COLLECTION: restaurants
+          MONGODB_DB: geumcheonLunch
+          MONGODB_COLLECTION: placePhotos
         run: node scripts/export-restaurants.mjs
 
       - name: Commit updated public data
