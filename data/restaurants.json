@@ -1,5 +1,85 @@
 {
-  "generatedAt": "2026-08-16T09:39:22.140Z",
-  "count": 0,
-  "restaurants": []
+  "generatedAt": "2026-08-16T09:44:54.931Z",
+  "count": 23,
+  "restaurants": [
+    {
+      "placeId": "347052149",
+      "imageUrl": "https://img1.kakaocdn.net/cthumb/local/C544x408.q50/?fname=http%3A%2F%2Ft1.kakaocdn.net%2Fmystore%2F5A5DA4034B4C456196C346248693915B"
+    },
+    {
+      "placeId": "254700095",
+      "imageUrl": "https://t1.kakaocdn.net/kakaomapweb/place_new/"
+    },
+    {
+      "placeId": "494952903",
+      "imageUrl": "https://t1.kakaocdn.net/kakaomapweb/place_new/"
+    },
+    {
+      "placeId": "2044246780"
+    },
+    {
+      "placeId": "686281461",
+      "imageUrl": "https://t1.kakaocdn.net/kakaomapweb/place_new/"
+    },
+    {
+      "placeId": "989829884",
+      "imageUrl": "https://t1.kakaocdn.net/kakaomapweb/place_new/"
+    },
+    {
+      "placeId": "1872285961",
+      "imageUrl": "https://t1.kakaocdn.net/kakaomapweb/place_new/"
+    },
+    {
+      "placeId": "16082463"
+    },
+    {
+      "placeId": "737722501",
+      "imageUrl": "https://t1.kakaocdn.net/kakaomapweb/place_new/"
+    },
+    {
+      "placeId": "2007413168",
+      "imageUrl": "https://t1.kakaocdn.net/kakaomapweb/place_new/"
+    },
+    {
+      "placeId": "348431719",
+      "imageUrl": "https://t1.kakaocdn.net/kakaomapweb/place_new/"
+    },
+    {
+      "placeId": "1831478220"
+    },
+    {
+      "placeId": "1991421161",
+      "imageUrl": "https://t1.kakaocdn.net/kakaomapweb/place_new/"
+    },
+    {
+      "placeId": "520069178"
+    },
+    {
+      "placeId": "75829145"
+    },
+    {
+      "placeId": "21192951"
+    },
+    {
+      "placeId": "2124268896"
+    },
+    {
+      "placeId": "1713083808"
+    },
+    {
+      "placeId": "1106374768"
+    },
+    {
+      "placeId": "1889555034"
+    },
+    {
+      "placeId": "806984469"
+    },
+    {
+      "placeId": "504744038"
+    },
+    {
+      "placeId": "1149345294"
+    }
+  ]
 }
