@@ -45,9 +45,9 @@ body:after{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;bac
         <a class="app" href="./apps/lunch/">
           <div class="app-icon">🍚</div><div><h3>금천한끼</h3><p>오늘 점심을 대신 고민해주는 룰렛</p></div><span class="status live">사용 가능</span>
         </a>
-        <a class="app" href="./archive/run/">
-          <div class="app-icon">🏃</div><div><h3>퇴근 대시</h3><p>전화와 결재서류를 피하는 실패한 실험</p></div><span class="status dead">보관됨</span>
-        </a>
+        <article class="app pending" tabindex="0" data-msg="퇴근 대시는 완성도가 부족해 봉인되었습니다.">
+          <div class="app-icon">🔒</div><div><h3>퇴근 대시</h3><p>완성도가 부족해 잠가둔 실험</p></div><span class="status dead">잠김</span>
+        </article>
       </section>
       <nav class="app-pager" id="appPager" aria-label="앱 목록 페이지" hidden><button class="pager-btn" id="prevApps" type="button" aria-label="이전 앱 4개">&lt;</button><strong class="page-label" id="pageLabel">1 / 1</strong><button class="pager-btn" id="nextApps" type="button" aria-label="다음 앱 4개">&gt;</button></nav>
       <p style="margin:22px 0 0;text-align:center;font:700 11px sans-serif;color:#5f6663;">※ 본 사이트는 개인적으로 제작한 비공식 실험 서비스입니다.</p>
