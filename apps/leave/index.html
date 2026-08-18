@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#164a43"><title>연가보상비 계산기 | GC LAB 92</title>
+<style>
+:root{--cream:#fff8df;--ink:#191c1b;--green:#126c5d;--mint:#92e6c0;--yellow:#ffd84d;--pink:#ff7897;--blue:#75bfff;--grey:#d8d4c7;--navy:#082e6f}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Courier New","Malgun Gothic",monospace;color:var(--ink)}
+body{overflow-x:hidden;background-color:#164a43;background-image:linear-gradient(45deg,#ffffff0a 25%,transparent 25%),linear-gradient(-45deg,#ffffff0a 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#ffffff0a 75%),linear-gradient(-45deg,transparent 75%,#ffffff0a 75%);background-size:28px 28px;background-position:0 0,0 14px,14px -14px,-14px 0}
+body:after{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 3px,#00130e12 3px 4px);mix-blend-mode:multiply}
+button,input,select{font:inherit}.desktop{min-height:100dvh;padding:24px 20px 76px}.window{width:min(980px,100%);margin:auto;border:3px solid var(--ink);background:var(--cream);box-shadow:11px 12px 0 #0a2824;border-radius:3px;animation:boot .4s steps(5)}@keyframes boot{from{opacity:0;transform:scale(.98) translateY(8px)}}
+.titlebar{height:43px;display:flex;align-items:center;padding:5px 7px 5px 12px;background:linear-gradient(90deg,#082e6f,#168da1);color:#fff;font-weight:1000;border-bottom:3px solid var(--ink)}.titlebar .name{flex:1}.control{width:29px;height:27px;padding:0;border:2px solid var(--ink);background:var(--grey);box-shadow:inset 2px 2px #fff,inset -2px -2px #817e74;font:bold 17px Arial;cursor:pointer}.menubar{display:flex;gap:22px;padding:7px 13px;border-bottom:2px solid #817e74;background:#e7e2d3;font-size:13px}.menubar a{color:inherit;text-decoration:none}.content{padding:clamp(17px,4vw,34px)}
+.heading{display:flex;gap:17px;align-items:center;padding-bottom:21px;border-bottom:3px dashed var(--ink)}.heading-icon{display:grid;place-items:center;width:72px;height:72px;flex:0 0 72px;border:3px solid var(--ink);border-radius:9px;background:var(--yellow);box-shadow:5px 5px var(--ink);font-size:38px}.heading h1{margin:0 0 7px;font-size:clamp(25px,5vw,40px);letter-spacing:-2px}.heading p{margin:0;font:700 13px/1.55 "Malgun Gothic",sans-serif;color:#4b5552}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:23px 0 18px}.tab{padding:12px 7px;border:3px solid var(--ink);background:#e3dfd3;box-shadow:3px 3px var(--ink);font-weight:1000;cursor:pointer}.tab.active{background:var(--mint);transform:translate(2px,2px);box-shadow:1px 1px var(--ink)}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.85fr);gap:20px}.panel{border:3px solid var(--ink);background:#fff;box-shadow:5px 5px var(--ink)}.panel-title{padding:9px 12px;background:#e7e2d3;border-bottom:3px solid var(--ink);font-weight:1000}.form{display:grid;gap:14px;padding:18px}.field{display:grid;grid-template-columns:125px 1fr;gap:12px;align-items:center}.field label{font:800 13px "Malgun Gothic",sans-serif}.input-wrap{position:relative}.input-wrap input{padding-right:42px}.unit{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-weight:900;color:#555}.field input,.field select{width:100%;height:42px;padding:7px 10px;border:3px solid var(--ink);border-radius:0;background:#fff;box-shadow:inset 2px 2px #c7c7c7}.field input[readonly]{background:#f1eee4;color:#31433f;font-weight:900}.hint{grid-column:2;font:11px/1.5 "Malgun Gothic",sans-serif;color:#666;margin-top:-8px}.actions{display:flex;gap:10px;margin-top:3px}.primary,.secondary{min-height:44px;padding:9px 18px;border:3px solid var(--ink);box-shadow:4px 4px var(--ink);font-weight:1000;cursor:pointer}.primary{flex:1;background:var(--yellow)}.secondary{background:#ddd}.primary:active,.secondary:active{transform:translate(3px,3px);box-shadow:1px 1px var(--ink)}
+.result{display:flex;flex-direction:column}#regularFields,#termFields,#partFields{display:grid;gap:14px}.screen{margin:18px;padding:20px 13px;border:3px inset #777;background:#101b17;color:#7dffb3;text-align:center}.screen small{display:block;font-weight:900;color:#a8cbb6}.amount{margin:10px 0 4px;font-size:clamp(29px,6vw,46px);font-weight:1000;letter-spacing:-2px;text-shadow:0 0 9px #48ff9355}.breakdown{display:grid;gap:9px;padding:0 18px 18px}.row{display:flex;justify-content:space-between;gap:12px;padding-bottom:8px;border-bottom:1px dashed #999;font:800 13px "Malgun Gothic",sans-serif}.row strong{white-space:nowrap}.formula{margin:0 18px 18px;padding:12px;border:2px solid var(--ink);background:#fff4bd;font:700 12px/1.65 "Malgun Gothic",sans-serif;word-break:keep-all}.formula b{display:block;margin-bottom:4px}.notice{margin-top:23px;padding:14px 16px;border:2px solid var(--ink);background:#111;color:#79ffb5;font:12px/1.7 "Malgun Gothic",sans-serif}.notice strong{color:#fff}.source{margin-top:10px;font-size:11px;color:#5c625f}.source a{color:var(--navy)}
+.taskbar{position:fixed;z-index:80;left:0;right:0;bottom:0;height:53px;display:flex;align-items:center;gap:7px;padding:6px;background:#d3cfc2;border-top:3px solid #fff;box-shadow:0 -3px var(--ink)}.start{height:38px;padding:0 15px;border:3px solid var(--ink);background:var(--yellow);font:1000 15px "Courier New"}.task{height:37px;max-width:320px;flex:1;padding:8px 12px;border:2px solid var(--ink);background:#eee;box-shadow:inset 2px 2px #777;font-weight:900;overflow:hidden;white-space:nowrap}.clock{margin-left:auto;min-width:91px;padding:9px;border:2px solid #777;background:#eee;text-align:center;font-weight:900}.hidden{display:none!important}
+@media(max-width:720px){.desktop{padding:10px 9px 68px}.content{padding:17px}.workspace{grid-template-columns:1fr}.tabs{grid-template-columns:1fr}.field{grid-template-columns:1fr;gap:6px}.hint{grid-column:1;margin-top:-3px}.heading-icon{width:58px;height:58px;flex-basis:58px;font-size:30px}.menubar{gap:12px}.task{max-width:none}.clock{min-width:72px;font-size:12px}}
+</style>
+</head>
+<body>
+<div class="desktop"><main class="window">
+  <div class="titlebar"><span class="name">💰 LEAVE_PAY.EXE</span><button class="control" type="button" onclick="location.href='../../'">×</button></div>
+  <div class="menubar"><a href="../../">← GC LAB</a><span>2026 기준</span><span>Help</span></div>
+  <div class="content">
+    <header class="heading"><div class="heading-icon">💰</div><div><h1>연가보상비 계산기</h1><p>금천구 연말 1회 지급 기준 · 예상 금액을 간단히 확인합니다.</p></div></header>
+    <div class="tabs" role="tablist" aria-label="근무유형">
+      <button class="tab active" data-mode="regular" role="tab" aria-selected="true">일반직 호봉제</button>
+      <button class="tab" data-mode="term" role="tab" aria-selected="false">임기제·연봉제</button>
+      <button class="tab" data-mode="part" role="tab" aria-selected="false">시간선택제</button>
+    </div>
+    <div class="workspace">
+      <section class="panel"><div class="panel-title">▣ 기본정보 입력</div><form class="form" id="calculator">
+        <div id="regularFields">
+          <div class="field"><label for="grade">직급</label><select id="grade"><option value="9">9급</option><option value="8">8급</option><option value="7" selected>7급</option><option value="6">6급</option><option value="5">5급</option><option value="4">4급</option><option value="3">3급</option></select></div>
+          <div class="field"><label for="step">호봉</label><select id="step"></select></div>
+          <div class="field"><label for="salary">2026년 기본급</label><div class="input-wrap"><input id="salary" readonly><span class="unit">원</span></div><div class="hint">2026년 일반직 봉급표에서 자동으로 불러옵니다.</div></div>
+        </div>
+        <div id="termFields" class="hidden">
+          <div class="field"><label for="annualPay">성과연봉 제외 연봉</label><div class="input-wrap"><input id="annualPay" inputmode="numeric" placeholder="예: 48000000"><span class="unit">원</span></div></div>
+          <div class="field"><label for="annualRate">적용률</label><select id="annualRate"><option value="0.78">78% · 일반 연봉제</option><option value="0.84">84% · 관리업무수당 미포함 대상</option></select><div class="hint">본인의 임용·보수 유형에 맞는 적용률을 선택하세요.</div></div>
+        </div>
+        <div id="partFields" class="hidden">
+          <div class="field"><label for="partType">보수 유형</label><select id="partType"><option value="salary">호봉제 월봉급</option><option value="annual">임기제·연봉제</option></select></div>
+          <div class="field" id="partSalaryField"><label for="partSalary">현재 월봉급액</label><div class="input-wrap"><input id="partSalary" inputmode="numeric" placeholder="월봉급액"><span class="unit">원</span></div></div>
+          <div class="field hidden" id="partAnnualField"><label for="partAnnual">성과연봉 제외 연봉</label><div class="input-wrap"><input id="partAnnual" inputmode="numeric" placeholder="연간 금액"><span class="unit">원</span></div></div>
+          <div class="field hidden" id="partRateField"><label for="partRate">적용률</label><select id="partRate"><option value="0.78">78%</option><option value="0.84">84%</option></select></div>
+          <div class="field"><label for="weeklyHours">주당 근무시간</label><div class="input-wrap"><input id="weeklyHours" type="number" min="1" max="40" step="1" value="35"><span class="unit">시간</span></div></div>
+        </div>
+        <div class="field" id="daysField"><label for="days">연가보상일수</label><div class="input-wrap"><input id="days" type="number" min="0" max="20" step="0.125" value="10"><span class="unit">일</span></div><div class="hint">기관에서 확정한 보상 대상 일수를 입력하세요. 최대 20일.</div></div>
+        <div class="field hidden" id="hoursField"><label for="leaveHours">연가보상시간</label><div class="input-wrap"><input id="leaveHours" type="number" min="0" max="160" step="1" value="70"><span class="unit">시간</span></div><div class="hint">미사용 연가의 보상 대상 시간을 입력하세요.</div></div>
+        <div class="actions"><button class="primary" type="submit">▶ 계산하기</button><button class="secondary" id="resetBtn" type="button">초기화</button></div>
+      </form></section>
+      <section class="panel result" aria-live="polite"><div class="panel-title">▣ 예상 지급액</div><div class="screen"><small>ESTIMATED LEAVE PAY</small><div class="amount" id="resultAmount">0원</div><small>세전 예상액</small></div><div class="breakdown"><div class="row"><span>기준금액</span><strong id="baseAmount">-</strong></div><div class="row"><span>적용률</span><strong id="rateText">-</strong></div><div class="row"><span id="unitLabel">1일 보상액</span><strong id="unitAmount">-</strong></div><div class="row"><span>보상 대상</span><strong id="leaveAmount">-</strong></div></div><div class="formula" id="formula"><b>계산 과정</b>정보를 입력하고 계산하기를 눌러주세요.</div></section>
+    </div>
+    <div class="notice"><strong>🔒 모든 계산은 브라우저 안에서만 처리됩니다.</strong><br>입력한 봉급·연봉 정보는 저장되거나 서버로 전송되지 않습니다.</div>
+    <p class="source">※ 2026년 일반직 봉급표 및 지방공무원 연가보상비 산식을 반영한 참고용 계산기입니다. 실제 지급액은 인사·급여 담당 부서의 산정 결과를 따릅니다.</p>
+  </div>
+</main></div>
+<div class="taskbar"><button class="start" onclick="location.href='../../'">▣ START</button><div class="task">💰 연가보상비 계산기</div><div class="clock" id="clock">00:00</div></div>
+<script>
+const pay={
+  3:[3781700,3921600,4065700,4210800,4358300,4507200,4658000,4809000,4961400,5113600,5266200,5424200,5571200,5707600,5833400,5950500,6059400,6160700,6254300,6342100,6423300,6498500,6567800,6632800,6685800,6736700,6783800],
+  4:[3241200,3373500,3508000,3645700,3785200,3926200,4068300,4211100,4354500,4497700,4642100,4778100,4905100,5023800,5135500,5240900,5338700,5430100,5515500,5595300,5669800,5739700,5805400,5867300,5923800,5971800,6015900,6058300],
+  5:[2896400,3013400,3135000,3261300,3390900,3523000,3657300,3793200,3929600,4066800,4195300,4319000,4436400,4545900,4649400,4746800,4838400,4924800,5006300,5082700,5154500,5222000,5285600,5345200,5401500,5454500,5498400,5540700,5579500,5617200],
+  6:[2389500,2500700,2615200,2732400,2853100,2977100,3101500,3226200,3351300,3468700,3580000,3689600,3792700,3890000,3983600,4071300,4154900,4234100,4309100,4379600,4447600,4511500,4571300,4628500,4682800,4734100,4782800,4823700,4861900,4899800,4934800,4967800],
+  7:[2317100,2367900,2423800,2485200,2567100,2682600,2798700,2915800,3027100,3133300,3233400,3331900,3425300,3514500,3599900,3680600,3758100,3832100,3902000,3968400,4031800,4091600,4149600,4204500,4256500,4306500,4348700,4388000,4426100,4462400,4496500],
+  8:[2162100,2195700,2233800,2276600,2331700,2412900,2519600,2622400,2720300,2813000,2902700,2990300,3074500,3155100,3232400,3307100,3376800,3444300,3509300,3571100,3630200,3686900,3740800,3792900,3842300,3890300,3930200,3968700,4005100,4040300,4074600],
+  9:[2133000,2147600,2168000,2194000,2226100,2264600,2309900,2367500,2456700,2542700,2624400,2705900,2783900,2859800,2932300,3002300,3070800,3134500,3197300,3257000,3313400,3367600,3419200,3468800,3516000,3558700,3595600,3631000,3665100,3698400,3731100]
+};
+let mode='regular';
+const $=s=>document.querySelector(s),fmt=n=>Math.floor(Number(n)||0).toLocaleString('ko-KR')+'원',num=v=>Number(String(v||'').replace(/[^0-9.]/g,''))||0;
+function updateSteps(){const grade=$('#grade').value,current=Number($('#step').value)||1;$('#step').innerHTML=pay[grade].map((_,i)=>`<option value="${i+1}">${i+1}호봉</option>`).join('');$('#step').value=Math.min(current,pay[grade].length);updateSalary()}
+function updateSalary(){const value=pay[$('#grade').value][Number($('#step').value)-1];$('#salary').value=value.toLocaleString('ko-KR')}
+function setMode(next){mode=next;document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.mode===mode;b.classList.toggle('active',on);b.setAttribute('aria-selected',on)});$('#regularFields').classList.toggle('hidden',mode!=='regular');$('#termFields').classList.toggle('hidden',mode!=='term');$('#partFields').classList.toggle('hidden',mode!=='part');$('#daysField').classList.toggle('hidden',mode==='part');$('#hoursField').classList.toggle('hidden',mode!=='part');clearResult()}
+function clearResult(){$('#resultAmount').textContent='0원';$('#baseAmount').textContent='-';$('#rateText').textContent='-';$('#unitAmount').textContent='-';$('#leaveAmount').textContent='-';$('#formula').innerHTML='<b>계산 과정</b>정보를 입력하고 계산하기를 눌러주세요.'}
+function calculate(e){e?.preventDefault();let base,rate,unit,total,leave,formula;
+  if(mode==='regular'){base=pay[$('#grade').value][Number($('#step').value)-1];rate=.86;leave=Math.min(20,Math.max(0,num($('#days').value)));unit=base*rate/30;total=unit*leave;formula=`${fmt(base)} × 86% ÷ 30 × ${leave}일`;
+  }else if(mode==='term'){const annual=num($('#annualPay').value);if(!annual)return alert('성과연봉을 제외한 연봉을 입력해주세요.');base=annual/12;rate=num($('#annualRate').value);leave=Math.min(20,Math.max(0,num($('#days').value)));unit=base*rate/30;total=unit*leave;formula=`(${fmt(annual)} ÷ 12) × ${rate*100}% ÷ 30 × ${leave}일`;
+  }else{const annual=$('#partType').value==='annual';rate=annual?num($('#partRate').value):.86;base=annual?num($('#partAnnual').value)/12:num($('#partSalary').value);if(!base)return alert(annual?'성과연봉을 제외한 연봉을 입력해주세요.':'현재 월봉급액을 입력해주세요.');const daily=num($('#weeklyHours').value)/40*8;if(!daily)return alert('주당 근무시간을 입력해주세요.');leave=Math.max(0,num($('#leaveHours').value));unit=base*rate/30/daily;total=unit*leave;formula=`${fmt(base)} × ${rate*100}% ÷ 30 ÷ ${daily.toFixed(2)}시간 × ${leave}시간`;
+  }
+  $('#resultAmount').textContent=fmt(total);$('#baseAmount').textContent=fmt(base);$('#rateText').textContent=(rate*100)+'%';$('#unitLabel').textContent=mode==='part'?'1시간 보상액':'1일 보상액';$('#unitAmount').textContent=fmt(unit);$('#leaveAmount').textContent=mode==='part'?leave+'시간':leave+'일';$('#formula').innerHTML=`<b>계산 과정</b>${formula}<br>= ${fmt(total)} <small>(원 미만 버림)</small>`;
+}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));$('#grade').addEventListener('change',updateSteps);$('#step').addEventListener('change',updateSalary);$('#calculator').addEventListener('submit',calculate);$('#partType').addEventListener('change',()=>{const annual=$('#partType').value==='annual';$('#partSalaryField').classList.toggle('hidden',annual);$('#partAnnualField').classList.toggle('hidden',!annual);$('#partRateField').classList.toggle('hidden',!annual)});$('#resetBtn').addEventListener('click',()=>{document.querySelector('#calculator').reset();updateSteps();setMode('regular')});
+function updateClock(){$('#clock').textContent=new Intl.DateTimeFormat('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())}updateSteps();calculate();updateClock();setInterval(updateClock,30000);
+</script>
+</body></html>
