@@ -90,13 +90,11 @@
     <div class="panel-row">
       <section class="panel">
         <div class="panel-title">1. 데이터 입력 및 생성 옵션</div>
-        <div class="panel-desc">URL과 QR·프레임·로고 옵션을 설정하면 결과가 자동으로 반영됩니다.</div>
-
         <div class="config-grid">
           <div>
             <div class="input-block-title">URL 입력</div>
             <div class="field">
-              <textarea id="urlText" class="url-input" placeholder="https://example.com"></textarea>
+              <textarea id="urlText" class="url-input">https://www.geumcheon.go.kr/portal/index.do</textarea>
             </div>
 
             <div class="option-card">
@@ -2737,7 +2735,7 @@ var qrcode = function() {
     }
 
     function resetAll(){
-      urlTextEl.value = '';
+      urlTextEl.value = 'https://www.geumcheon.go.kr/portal/index.do';
       frameModeEl.value = 'gradient';
       frameColorEl.value = '#0056b8';
       frameThicknessEl.value = 12;
