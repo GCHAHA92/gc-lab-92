@@ -20,10 +20,10 @@ button,input,select{font:inherit}.desktop{min-height:100dvh;padding:24px 20px 76
 </head>
 <body>
 <div class="desktop"><main class="window">
-  <div class="titlebar"><span class="name">💰 연가보상비 계산기.EXE</span><button class="control" type="button" onclick="location.href='../../'">×</button></div>
+  <div class="titlebar"><span class="name">💰 LEAVE_PAY.EXE</span><button class="control" type="button" onclick="location.href='../../'">×</button></div>
   <div class="menubar"><a href="../../">← GC LAB</a><span>2026 기준</span><span>Help</span></div>
   <div class="content">
-    <header class="heading"><div class="heading-icon">💰</div><div><h1>연가보상비 계산기</h1><p>금천구 연가보상비 예상 금액을 간단히 확인합니다.</p></div></header>
+    <header class="heading"><div class="heading-icon">💰</div><div><h1>연가보상비 계산기</h1><p>금천구 연말 1회 지급 기준 · 예상 금액을 간단히 확인합니다.</p></div></header>
     <div class="tabs" role="tablist" aria-label="근무유형">
       <button class="tab active" data-mode="regular" role="tab" aria-selected="true">호봉제(6급 이하)</button>
       <button class="tab" data-mode="term" role="tab" aria-selected="false">연봉제·일반임기제</button>
@@ -34,25 +34,24 @@ button,input,select{font:inherit}.desktop{min-height:100dvh;padding:24px 20px 76
         <div id="regularFields">
           <div class="field"><label for="grade">직급</label><select id="grade"><option value="9">9급</option><option value="8">8급</option><option value="7" selected>7급</option><option value="6">6급</option></select></div>
           <div class="field"><label for="step">호봉</label><select id="step"></select></div>
-          <div class="field"><label for="salary">2026년 기본급</label><div class="input-wrap"><input id="salary" readonly><span class="unit">원</span></div><div class="hint">2026년 일반직 봉급표에서 자동으로 불러옵니다.</div></div>
+          <div class="field"><label for="salary">2026년 기본급</label><div class="input-wrap"><input id="salary" readonly><span class="unit">원</span></div></div>
         </div>
         <div id="termFields" class="hidden">
-          <div class="field"><label for="annualPay">성과연봉 제외 연봉</label><div class="input-wrap"><input id="annualPay" inputmode="numeric" placeholder="예: 42,000,000"><span class="unit">원</span></div></div>
-          <div class="field"><label for="annualRate">보수 유형</label><select id="annualRate"><option value="0.84" selected>일반임기제 · 84%</option><option value="0.78">일반직 연봉제(5급 이상) · 78%</option></select><div class="hint">선택한 비율에 지급률 86%가 추가로 적용됩니다.</div></div>
+          <div class="field"><label for="annualPay">성과연봉 제외 연봉</label><div class="input-wrap"><input id="annualPay" inputmode="numeric" placeholder="예: 48000000"><span class="unit">원</span></div></div>
+          <div class="field"><label for="annualRate">보수 유형</label><select id="annualRate"><option value="0.84" selected>일반임기제 · 84%</option><option value="0.78">일반직 연봉제(5급 이상) · 78%</option></select></div>
         </div>
         <div id="partFields" class="hidden">
           <div class="field"><label for="partAnnual">성과연봉 제외 연봉</label><div class="input-wrap"><input id="partAnnual" inputmode="numeric" placeholder="연간 금액"><span class="unit">원</span></div></div>
-          <div class="field"><label for="partAppliedRate">적용률</label><input id="partAppliedRate" value="84% × 86%" readonly></div>
           <div class="field"><label for="weeklyHours">주당 근무시간</label><div class="input-wrap"><input id="weeklyHours" type="number" min="1" max="40" step="1" value="35"><span class="unit">시간</span></div></div>
         </div>
-        <div class="field" id="daysField"><label for="days">연가보상일수</label><div class="input-wrap"><input id="days" type="number" min="0" max="20" step="0.125" value="16"><span class="unit">일</span></div><div class="hint"> 2025년 금천구 연가보상일수 : 16일<BR>(행지과-35266, 2025.11.27) </div></div>
+        <div class="field" id="daysField"><label for="days">연가보상일수</label><div class="input-wrap"><input id="days" type="number" min="0" max="20" step="0.125" value="16"><span class="unit">일</span></div><div class="hint">기관에서 확정한 보상 대상 일수를 입력하세요. 최대 20일.</div></div>
         <div class="field hidden" id="hoursField"><label for="leaveHours">연가보상시간</label><div class="input-wrap"><input id="leaveHours" type="number" min="0" max="160" step="1" value="70"><span class="unit">시간</span></div><div class="hint">미사용 연가의 보상 대상 시간을 입력하세요.</div></div>
         <div class="actions"><button class="primary" type="submit">▶ 계산하기</button><button class="secondary" id="resetBtn" type="button">초기화</button></div>
       </form></section>
-      <section class="panel result" aria-live="polite"><div class="panel-title">▣ 예상 지급액</div><div class="screen"><small>올해의 연가 보상비는...</small><div class="amount" id="resultAmount">0원</div><small>세전 예상액</small></div><div class="breakdown"><div class="row"><span>기준금액</span><strong id="baseAmount">-</strong></div><div class="row"><span>적용률</span><strong id="rateText">-</strong></div><div class="row"><span id="unitLabel">1일 보상액</span><strong id="unitAmount">-</strong></div><div class="row"><span>보상 일수</span><strong id="leaveAmount">-</strong></div></div></section>
+      <section class="panel result" aria-live="polite"><div class="panel-title">▣ 예상 지급액</div><div class="screen"><small>ESTIMATED LEAVE PAY</small><div class="amount" id="resultAmount">0원</div><small>세전 예상액</small></div><div class="breakdown"><div class="row"><span>기준금액</span><strong id="baseAmount">-</strong></div><div class="row"><span id="unitLabel">1일 보상액</span><strong id="unitAmount">-</strong></div><div class="row"><span>보상 대상</span><strong id="leaveAmount">-</strong></div></div></section>
     </div>
-    <div class="notice"><strong>🔒 모든 계산은 브라우저 안에서만 처리됩니다.</strong><br>입력한 모든 정보는 저장되거나 서버로 전송되지 않습니다.</div>
-    <p class="source">※ 2026년 일반직 봉급표 및 지방공무원 연가보상비 산식을 반영한 참고용 계산기입니다. 실제 지급액과 상이할 수 있습니다.</p>
+    <div class="notice"><strong>🔒 모든 계산은 브라우저 안에서만 처리됩니다.</strong><br>입력한 봉급·연봉 정보는 저장되거나 서버로 전송되지 않습니다.</div>
+    <p class="source">※ 2026년 일반직 봉급표 및 지방공무원 연가보상비 산식을 반영한 참고용 계산기입니다. 실제 지급액은 인사·급여 담당 부서의 산정 결과를 따릅니다.</p>
   </div>
 </main></div>
 <div class="taskbar"><button class="start" onclick="location.href='../../'">▣ START</button><div class="task">💰 연가보상비 계산기</div><div class="clock" id="clock">00:00</div></div>
@@ -71,13 +70,13 @@ const $=s=>document.querySelector(s),fmt=n=>Math.floor(Number(n)||0).toLocaleStr
 function updateSteps(){const grade=$('#grade').value,current=Number($('#step').value)||10;$('#step').innerHTML=pay[grade].map((_,i)=>`<option value="${i+1}">${i+1}호봉</option>`).join('');$('#step').value=Math.min(current,pay[grade].length);updateSalary()}
 function updateSalary(){const value=pay[$('#grade').value][Number($('#step').value)-1];$('#salary').value=value.toLocaleString('ko-KR')}
 function setMode(next){mode=next;document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.mode===mode;b.classList.toggle('active',on);b.setAttribute('aria-selected',on)});$('#regularFields').classList.toggle('hidden',mode!=='regular');$('#termFields').classList.toggle('hidden',mode!=='term');$('#partFields').classList.toggle('hidden',mode!=='part');$('#daysField').classList.toggle('hidden',mode==='part');$('#hoursField').classList.toggle('hidden',mode!=='part');clearResult()}
-function clearResult(){$('#resultAmount').textContent='0원';$('#baseAmount').textContent='-';$('#rateText').textContent='-';$('#unitAmount').textContent='-';$('#leaveAmount').textContent='-'}
-function calculate(e){e?.preventDefault();let base,rate,rateLabel,unit,total,leave;
-  if(mode==='regular'){base=pay[$('#grade').value][Number($('#step').value)-1];rate=.86;rateLabel='86%';leave=Math.min(20,Math.max(0,num($('#days').value)));unit=base*rate/30;total=unit*leave;
-  }else if(mode==='term'){const annual=num($('#annualPay').value);if(!annual)return alert('성과연봉을 제외한 연봉을 입력해주세요.');base=annual/12;const payRate=num($('#annualRate').value);rate=payRate*.86;rateLabel=`${payRate*100}% × 86%`;leave=Math.min(20,Math.max(0,num($('#days').value)));unit=base*rate/30;total=unit*leave;
-  }else{const annual=num($('#partAnnual').value);if(!annual)return alert('성과연봉을 제외한 연봉을 입력해주세요.');base=annual/12;rate=.84*.86;rateLabel='84% × 86%';const daily=num($('#weeklyHours').value)/40*8;if(!daily)return alert('주당 근무시간을 입력해주세요.');leave=Math.max(0,num($('#leaveHours').value));unit=base*rate/30/daily;total=unit*leave;
+function clearResult(){$('#resultAmount').textContent='0원';$('#baseAmount').textContent='-';$('#unitAmount').textContent='-';$('#leaveAmount').textContent='-'}
+function calculate(e){e?.preventDefault();let base,rate,unit,total,leave;
+  if(mode==='regular'){base=pay[$('#grade').value][Number($('#step').value)-1];rate=.86;leave=Math.min(20,Math.max(0,num($('#days').value)));unit=base*rate/30;total=unit*leave;
+  }else if(mode==='term'){const annual=num($('#annualPay').value);if(!annual)return alert('성과연봉을 제외한 연봉을 입력해주세요.');base=annual/12;const payRate=num($('#annualRate').value);rate=payRate*.86;leave=Math.min(20,Math.max(0,num($('#days').value)));unit=base*rate/30;total=unit*leave;
+  }else{const annual=num($('#partAnnual').value);if(!annual)return alert('성과연봉을 제외한 연봉을 입력해주세요.');base=annual/12;rate=.84*.86;const daily=num($('#weeklyHours').value)/40*8;if(!daily)return alert('주당 근무시간을 입력해주세요.');leave=Math.max(0,num($('#leaveHours').value));unit=base*rate/30/daily;total=unit*leave;
   }
-  $('#resultAmount').textContent=fmt(total);$('#baseAmount').textContent=fmt(base);$('#rateText').textContent=rateLabel;$('#unitLabel').textContent=mode==='part'?'1시간 보상액':'1일 보상액';$('#unitAmount').textContent=fmt(unit);$('#leaveAmount').textContent=mode==='part'?leave+'시간':leave+'일';
+  $('#resultAmount').textContent=fmt(total);$('#baseAmount').textContent=fmt(base);$('#unitLabel').textContent=mode==='part'?'1시간 보상액':'1일 보상액';$('#unitAmount').textContent=fmt(unit);$('#leaveAmount').textContent=mode==='part'?leave+'시간':leave+'일';
 }
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));$('#grade').addEventListener('change',updateSteps);$('#step').addEventListener('change',updateSalary);$('#calculator').addEventListener('submit',calculate);$('#resetBtn').addEventListener('click',()=>{document.querySelector('#calculator').reset();updateSteps();setMode('regular')});
 function updateClock(){$('#clock').textContent=new Intl.DateTimeFormat('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())}updateSteps();calculate();updateClock();setInterval(updateClock,30000);
