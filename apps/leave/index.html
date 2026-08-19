@@ -20,10 +20,10 @@ button,input,select{font:inherit}.desktop{min-height:100dvh;padding:24px 20px 76
 </head>
 <body>
 <div class="desktop"><main class="window">
-  <div class="titlebar"><span class="name">💰 LEAVE_PAY.EXE</span><button class="control" type="button" onclick="location.href='../../'">×</button></div>
+  <div class="titlebar"><span class="name">💰 연가보상비 계산기.EXE</span><button class="control" type="button" onclick="location.href='../../'">×</button></div>
   <div class="menubar"><a href="../../">← GC LAB</a><span>2026 기준</span><span>Help</span></div>
   <div class="content">
-    <header class="heading"><div class="heading-icon">💰</div><div><h1>연가보상비 계산기</h1><p>금천구 연말 1회 지급 기준 · 예상 금액을 간단히 확인합니다.</p></div></header>
+    <header class="heading"><div class="heading-icon">💰</div><div><h1>연가보상비 계산기</h1><p>금천구 연가보상비 예상 금액을 간단히 확인합니다.</p></div></header>
     <div class="tabs" role="tablist" aria-label="근무유형">
       <button class="tab active" data-mode="regular" role="tab" aria-selected="true">호봉제(6급 이하)</button>
       <button class="tab" data-mode="term" role="tab" aria-selected="false">연봉제·일반임기제</button>
@@ -37,7 +37,7 @@ button,input,select{font:inherit}.desktop{min-height:100dvh;padding:24px 20px 76
           <div class="field"><label for="salary">2026년 기본급</label><div class="input-wrap"><input id="salary" readonly><span class="unit">원</span></div><div class="hint">2026년 일반직 봉급표에서 자동으로 불러옵니다.</div></div>
         </div>
         <div id="termFields" class="hidden">
-          <div class="field"><label for="annualPay">성과연봉 제외 연봉</label><div class="input-wrap"><input id="annualPay" inputmode="numeric" placeholder="예: 48000000"><span class="unit">원</span></div></div>
+          <div class="field"><label for="annualPay">성과연봉 제외 연봉</label><div class="input-wrap"><input id="annualPay" inputmode="numeric" placeholder="예: 42,000,000"><span class="unit">원</span></div></div>
           <div class="field"><label for="annualRate">보수 유형</label><select id="annualRate"><option value="0.84" selected>일반임기제 · 84%</option><option value="0.78">일반직 연봉제(5급 이상) · 78%</option></select><div class="hint">선택한 비율에 지급률 86%가 추가로 적용됩니다.</div></div>
         </div>
         <div id="partFields" class="hidden">
@@ -52,7 +52,7 @@ button,input,select{font:inherit}.desktop{min-height:100dvh;padding:24px 20px 76
       <section class="panel result" aria-live="polite"><div class="panel-title">▣ 예상 지급액</div><div class="screen"><small>ESTIMATED LEAVE PAY</small><div class="amount" id="resultAmount">0원</div><small>세전 예상액</small></div><div class="breakdown"><div class="row"><span>기준금액</span><strong id="baseAmount">-</strong></div><div class="row"><span>적용률</span><strong id="rateText">-</strong></div><div class="row"><span id="unitLabel">1일 보상액</span><strong id="unitAmount">-</strong></div><div class="row"><span>보상 대상</span><strong id="leaveAmount">-</strong></div></div></section>
     </div>
     <div class="notice"><strong>🔒 모든 계산은 브라우저 안에서만 처리됩니다.</strong><br>입력한 봉급·연봉 정보는 저장되거나 서버로 전송되지 않습니다.</div>
-    <p class="source">※ 2026년 일반직 봉급표 및 지방공무원 연가보상비 산식을 반영한 참고용 계산기입니다. 실제 지급액은 인사·급여 담당 부서의 산정 결과를 따릅니다.</p>
+    <p class="source">※ 2026년 일반직 봉급표 및 지방공무원 연가보상비 산식을 반영한 참고용 계산기입니다. 실제 지급액과 상이할 수 있습니다.</p>
   </div>
 </main></div>
 <div class="taskbar"><button class="start" onclick="location.href='../../'">▣ START</button><div class="task">💰 연가보상비 계산기</div><div class="clock" id="clock">00:00</div></div>
