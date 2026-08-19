@@ -74,8 +74,9 @@
     .taskbar{position:fixed;z-index:80;left:0;right:0;bottom:0;height:47px;display:flex;align-items:center;gap:6px;padding:4px 6px;background:#d3cfc2;border-top:3px solid #fff;box-shadow:0 -3px var(--ink)}.start{height:34px;padding:0 13px;border:3px solid var(--ink);background:var(--yellow);font:1000 14px "Courier New"}.task{height:34px;max-width:280px;padding:7px 11px;border:2px solid var(--ink);background:#eee;box-shadow:inset 2px 2px #777;font-weight:900;white-space:nowrap}.clock{margin-left:auto;min-width:86px;padding:7px 8px;border:2px solid #777;background:#eee;text-align:center;font-weight:900}
     @media(max-width:900px){.desktop{padding:10px 9px 65px}.workbench{grid-template-columns:1fr}.panel{height:auto;min-height:480px}.window{width:100%}.url-bar{grid-template-columns:1fr}.settings-panel .field-grid{grid-template-columns:1fr}}
   </style>
+  <link rel="stylesheet" href="../../assets/desktop.css">
 </head>
-<body>
+<body data-gc-root="../../" data-gc-task-icon="▣" data-gc-task-title="QR코드 생성기">
   <div class="desktop"><main class="window">
     <div class="titlebar"><span class="name">▣ QR_CODE_MAKER.EXE</span><button class="control" type="button" onclick="location.href='../../'">×</button></div>
     <div class="menubar"><a href="../../">← 홈</a><span>QR 만들기</span></div>
@@ -113,7 +114,6 @@
     </div>
   </div>
   </main></div>
-  <div class="taskbar"><button class="start" onclick="location.href='../../'">▣ START</button><div class="task">▣ QR코드 생성기</div><div class="clock" id="clock">00:00</div></div>
 
   <script>
 //---------------------------------------------------------------------
@@ -2672,8 +2672,7 @@ var qrcode = function() {
     downloadBtn.addEventListener('click', downloadJpg);
     resetBtn.addEventListener('click', resetAll);
     renderPreview();
-    function updateClock(){document.getElementById('clock').textContent=new Intl.DateTimeFormat('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())}
-    updateClock();setInterval(updateClock,30000);
   </script>
+  <script src="../../assets/desktop.js"></script>
 </body>
 </html>
