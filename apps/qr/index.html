@@ -69,7 +69,7 @@
     body:after{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 3px,#00130e12 3px 4px);mix-blend-mode:multiply}
     .desktop{min-height:100dvh;padding:22px 20px 70px}.window{width:min(1240px,100%);margin:auto;border:3px solid var(--ink);background:var(--cream);box-shadow:11px 12px #0a2824}.titlebar{height:43px;display:flex;align-items:center;padding:5px 7px 5px 12px;background:linear-gradient(90deg,#082e6f,#168da1);color:#fff;font-weight:1000;border-bottom:3px solid var(--ink)}.titlebar .name{flex:1}.control{width:29px;height:27px;border:2px solid var(--ink);background:var(--grey);box-shadow:inset 2px 2px #fff,inset -2px -2px #817e74;font:bold 17px Arial;cursor:pointer}.menubar{display:flex;gap:22px;padding:7px 13px;border-bottom:2px solid #817e74;background:#e7e2d3;font-size:13px}.menubar a{color:inherit;text-decoration:none}
     .app{width:auto;margin:0;padding:20px 22px 24px}header{margin-bottom:8px}header h1{font:1000 27px "Courier New","Malgun Gothic",monospace}.logo-badge{border:3px solid var(--ink);border-radius:4px;background:var(--yellow);color:var(--ink);box-shadow:3px 3px var(--ink)}header p{font:700 13px/1.5 "Malgun Gothic",sans-serif;color:#4b5552}
-    .panel-row{grid-template-columns:minmax(0,1.08fr) minmax(380px,.92fr);gap:16px}.panel{height:660px;margin-top:12px;padding:16px;border:3px solid var(--ink);border-radius:0;box-shadow:5px 5px var(--ink)}.panel-title{font-weight:1000}.option-card,.result-box,textarea,input[type="text"],input[type="number"],input[type="color"],select{border:2px solid var(--ink);border-radius:0}.btn-ghost{border:3px solid var(--ink);border-radius:0;background:#eee;box-shadow:3px 3px var(--ink);font-weight:900}.btn-ghost:hover{background:var(--yellow)}.btn-ghost:active{transform:translate(2px,2px);box-shadow:1px 1px var(--ink)}
+    .panel-row{grid-template-columns:minmax(0,1.08fr) minmax(380px,.92fr);gap:16px}.panel{height:560px;margin-top:12px;padding:16px;border:3px solid var(--ink);border-radius:0;box-shadow:5px 5px var(--ink)}.panel-title{font-weight:1000}.option-card,.result-box,textarea,input[type="text"],input[type="number"],input[type="color"],select{border:2px solid var(--ink);border-radius:0}.btn-ghost{border:3px solid var(--ink);border-radius:0;background:#eee;box-shadow:3px 3px var(--ink);font-weight:900}.btn-ghost:hover{background:var(--yellow)}.btn-ghost:active{transform:translate(2px,2px);box-shadow:1px 1px var(--ink)}
     .taskbar{position:fixed;z-index:80;left:0;right:0;bottom:0;height:47px;display:flex;align-items:center;gap:6px;padding:4px 6px;background:#d3cfc2;border-top:3px solid #fff;box-shadow:0 -3px var(--ink)}.start{height:34px;padding:0 13px;border:3px solid var(--ink);background:var(--yellow);font:1000 14px "Courier New"}.task{height:34px;max-width:280px;padding:7px 11px;border:2px solid var(--ink);background:#eee;box-shadow:inset 2px 2px #777;font-weight:900;white-space:nowrap}.clock{margin-left:auto;min-width:86px;padding:7px 8px;border:2px solid #777;background:#eee;text-align:center;font-weight:900}
     @media(max-width:900px){.desktop{padding:10px 9px 65px}.panel-row{grid-template-columns:1fr}.panel{height:auto;min-height:520px}.config-grid{grid-template-columns:1fr}.window{width:100%}}
   </style>
@@ -90,7 +90,7 @@
     <div class="panel-row">
       <section class="panel">
         <div class="panel-title">1. 데이터 입력 및 생성 옵션</div>
-        <div class="panel-desc">URL과 프레임 스타일, 내부 문구, 외부 문구를 설정하면 결과가 자동으로 반영됩니다.</div>
+        <div class="panel-desc">URL과 QR·프레임·로고 옵션을 설정하면 결과가 자동으로 반영됩니다.</div>
 
         <div class="config-grid">
           <div>
@@ -100,48 +100,35 @@
             </div>
 
             <div class="option-card">
-              <div class="option-card-title">문구 설정</div>
-              <div class="field inline-row">
-                <div>
-                  <label for="insideText">내부 문구</label>
-                  <input id="insideText" type="text" value="" />
-                </div>
-                <div>
-                  <label for="insideTextPosition">위치</label>
-                  <select id="insideTextPosition">
-                    <option value="top" selected>위</option>
-                    <option value="bottom">아래</option>
-                  </select>
-                </div>
-              </div>
-              <div class="field inline-row">
-                <div>
-                  <label for="outsideText">외부 문구</label>
-                  <input id="outsideText" type="text" value="" />
-                </div>
-                <div>
-                  <label for="outsideTextPosition">위치</label>
-                  <select id="outsideTextPosition">
-                    <option value="top" selected>위</option>
-                    <option value="bottom">아래</option>
-                  </select>
-                </div>
-              </div>
+              <div class="option-card-title">QR코드 옵션</div>
               <div class="field-grid">
                 <div class="field">
-                  <label for="insideTextColor">내부 문구 색상</label>
-                  <input id="insideTextColor" type="color" value="#111111" />
+                  <label for="qrSize">QR코드 크기(px)</label>
+                  <input id="qrSize" type="number" min="160" step="10" value="250" />
                 </div>
                 <div class="field">
-                  <label for="outsideTextColor">외부 문구 색상</label>
-                  <input id="outsideTextColor" type="color" value="#111111" />
+                  <label for="qrMargin">QR 여백(모듈 수)</label>
+                  <input id="qrMargin" type="number" min="0" step="1" value="1" />
+                </div>
+                <div class="field">
+                  <label for="errorLevel">오류 보정</label>
+                  <select id="errorLevel">
+                    <option value="L">낮음 (L)</option>
+                    <option value="M" selected>보통 (M)</option>
+                    <option value="Q">높음 (Q)</option>
+                    <option value="H">매우 높음 (H)</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="qrColor">QR 색상</label>
+                  <input id="qrColor" type="color" value="#111111" />
                 </div>
               </div>
             </div>
           </div>
 
           <div>
-            <div class="input-block-title">프레임 및 출력 설정</div>
+            <div class="input-block-title">프레임 및 로고 설정</div>
             <div class="option-card">
               <div class="option-card-title">프레임 스타일</div>
               <div class="field-grid">
@@ -191,33 +178,6 @@
                 <div class="field">
                   <label for="logoSize">크기</label>
                   <select id="logoSize"><option value="small">작게</option><option value="medium" selected>보통</option><option value="large">크게</option></select>
-                </div>
-              </div>
-            </div>
-
-            <div class="option-card">
-              <div class="option-card-title">QR코드 옵션</div>
-              <div class="field-grid">
-                <div class="field">
-                  <label for="qrSize">QR코드 크기(px)</label>
-                  <input id="qrSize" type="number" min="160" step="10" value="250" />
-                </div>
-                <div class="field">
-                  <label for="qrMargin">QR 여백(모듈 수)</label>
-                  <input id="qrMargin" type="number" min="0" step="1" value="1" />
-                </div>
-                <div class="field">
-                  <label for="errorLevel">오류 보정</label>
-                  <select id="errorLevel">
-                    <option value="L">낮음 (L)</option>
-                    <option value="M" selected>보통 (M)</option>
-                    <option value="Q">높음 (Q)</option>
-                    <option value="H">매우 높음 (H)</option>
-                  </select>
-                </div>
-                <div class="field">
-                  <label for="qrColor">QR 색상</label>
-                  <input id="qrColor" type="color" value="#111111" />
                 </div>
               </div>
             </div>
@@ -2551,12 +2511,6 @@ var qrcode = function() {
   </script>
   <script>
     const urlTextEl = document.getElementById('urlText');
-    const insideTextEl = document.getElementById('insideText');
-    const outsideTextEl = document.getElementById('outsideText');
-    const insideTextPositionEl = document.getElementById('insideTextPosition');
-    const outsideTextPositionEl = document.getElementById('outsideTextPosition');
-    const insideTextColorEl = document.getElementById('insideTextColor');
-    const outsideTextColorEl = document.getElementById('outsideTextColor');
     const frameModeEl = document.getElementById('frameMode');
     const frameColorEl = document.getElementById('frameColor');
     const frameThicknessEl = document.getElementById('frameThickness');
@@ -2648,14 +2602,6 @@ var qrcode = function() {
       return canvas;
     }
 
-    function drawCenteredText(ctx, text, x, y, color, font){
-      ctx.font = font;
-      ctx.fillStyle = color;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(text, x, y);
-    }
-
     function drawLogo(ctx,image,centerX,top,maxWidth,slotHeight){
       const maxHeight=Math.max(24,slotHeight-8);
       const scale=Math.min(maxWidth/image.naturalWidth,maxHeight/image.naturalHeight);
@@ -2679,12 +2625,6 @@ var qrcode = function() {
         const frameRadius = clampNumber(frameRadiusEl.value, 0, 120, 28);
         const innerPadding = clampNumber(innerPaddingEl.value, 0, 150, 28);
         const frameColor = frameColorEl.value || '#0056b8';
-        const insideText = insideTextEl.value.trim();
-        const outsideText = outsideTextEl.value.trim();
-        const insideTextColor = insideTextColorEl.value || '#111111';
-        const outsideTextColor = outsideTextColorEl.value || '#111111';
-        const insideTextPosition = insideTextPositionEl.value || 'top';
-        const outsideTextPosition = outsideTextPositionEl.value || 'top';
         const frameMode = frameModeEl.value || 'gradient';
         frameColorEl.disabled = frameMode === 'gradient';
         const qrColor = qrColorEl.value || '#111111';
@@ -2694,25 +2634,19 @@ var qrcode = function() {
         const logoSize = logoSizeEl.value || 'medium';
         const logoImage = await loadLogo(logoType);
         const qrCanvas = createQrCanvas(url, qrSize, qrMargin, level, qrColor);
-        const outsideGap = outsideText ? 54 : 0;
-        const insideGap = insideText ? 58 : 0;
         const logoGap = logoImage ? ({small:52,medium:72,large:94}[logoSize] || 72) : 0;
         const frameWidth = qrSize + (innerPadding * 2) + (frameThickness * 2);
-        const frameHeight = qrSize + (innerPadding * 2) + (frameThickness * 2) + insideGap + logoGap;
+        const frameHeight = qrSize + (innerPadding * 2) + (frameThickness * 2) + logoGap;
         const canvasWidth = frameWidth + 40;
-        const canvasHeight = frameHeight + outsideGap + 40;
+        const canvasHeight = frameHeight + 40;
         const canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
         const ctx = canvas.getContext('2d');
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-        const topOutside = outsideText && outsideTextPosition === 'top' ? outsideGap : 0;
         const frameX = (canvasWidth - frameWidth) / 2;
-        const frameY = 20 + topOutside;
-        if(outsideText && outsideTextPosition === 'top'){
-          drawCenteredText(ctx, outsideText, canvasWidth / 2, 36, outsideTextColor, 'bold 24px "Malgun Gothic", sans-serif');
-        }
+        const frameY = 20;
         if(frameMode === 'gradient'){
           const gradient=ctx.createLinearGradient(frameX,frameY,frameX+frameWidth,frameY+frameHeight);
           gradient.addColorStop(0,'#3b8dcc');
@@ -2732,10 +2666,6 @@ var qrcode = function() {
         drawRoundedRect(ctx, innerX, innerY, innerWidth, innerHeight, Math.max(0, frameRadius - frameThickness));
         ctx.fill();
         let topCursor = innerY + innerPadding;
-        if(insideText && insideTextPosition === 'top'){
-          drawCenteredText(ctx, insideText, canvasWidth / 2, topCursor + 18, insideTextColor, 'bold 22px "Malgun Gothic", sans-serif');
-          topCursor += insideGap;
-        }
         if(logoImage && logoPosition === 'top'){
           drawLogo(ctx,logoImage,canvasWidth/2,topCursor,innerWidth-(innerPadding*2),logoGap);
           topCursor += logoGap;
@@ -2744,15 +2674,9 @@ var qrcode = function() {
         const qrDrawBottom = qrDrawTop + qrSize;
         const qrX = (canvasWidth - qrSize) / 2;
         ctx.drawImage(qrCanvas, qrX, qrDrawTop, qrSize, qrSize);
-        if(insideText && insideTextPosition === 'bottom'){
-          drawCenteredText(ctx, insideText, canvasWidth / 2, qrDrawBottom + 29, insideTextColor, 'bold 22px "Malgun Gothic", sans-serif');
-        }
-        let bottomLogoTop=qrDrawBottom+(insideText && insideTextPosition==='bottom'?insideGap:0);
+        let bottomLogoTop=qrDrawBottom;
         if(logoImage && logoPosition === 'bottom'){
           drawLogo(ctx,logoImage,canvasWidth/2,bottomLogoTop,innerWidth-(innerPadding*2),logoGap);
-        }
-        if(outsideText && outsideTextPosition === 'bottom'){
-          drawCenteredText(ctx, outsideText, canvasWidth / 2, canvasHeight - 36, outsideTextColor, 'bold 24px "Malgun Gothic", sans-serif');
         }
         finalCanvas = canvas;
         resultBox.innerHTML = '<div class="preview-wrap"><canvas id="previewCanvas"></canvas></div>';
@@ -2814,12 +2738,6 @@ var qrcode = function() {
 
     function resetAll(){
       urlTextEl.value = '';
-      insideTextEl.value = '';
-      outsideTextEl.value = '';
-      insideTextPositionEl.value = 'top';
-      outsideTextPositionEl.value = 'top';
-      insideTextColorEl.value = '#111111';
-      outsideTextColorEl.value = '#111111';
       frameModeEl.value = 'gradient';
       frameColorEl.value = '#0056b8';
       frameThicknessEl.value = 12;
@@ -2835,7 +2753,7 @@ var qrcode = function() {
       renderPreview();
     }
 
-    [urlTextEl, insideTextEl, outsideTextEl, insideTextPositionEl, outsideTextPositionEl, insideTextColorEl, outsideTextColorEl, frameModeEl, frameColorEl, frameThicknessEl, frameRadiusEl, innerPaddingEl, qrSizeEl, qrMarginEl, errorLevelEl, qrColorEl, logoTypeEl, logoPositionEl, logoSizeEl].forEach(el => {
+    [urlTextEl, frameModeEl, frameColorEl, frameThicknessEl, frameRadiusEl, innerPaddingEl, qrSizeEl, qrMarginEl, errorLevelEl, qrColorEl, logoTypeEl, logoPositionEl, logoSizeEl].forEach(el => {
       el.addEventListener('input', renderPreview);
       el.addEventListener('change', renderPreview);
     });
