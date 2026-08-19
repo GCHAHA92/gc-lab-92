@@ -38,14 +38,14 @@ button,input,select{font:inherit}.desktop{min-height:100dvh;padding:24px 20px 76
         </div>
         <div id="termFields" class="hidden">
           <div class="field"><label for="annualPay">성과연봉 제외 연봉</label><div class="input-wrap"><input id="annualPay" inputmode="numeric" placeholder="예: 48000000"><span class="unit">원</span></div></div>
-          <div class="field"><label for="annualRate">보수 유형</label><select id="annualRate"><option value="0.78">일반직 연봉제(5급 이상) · 78%</option><option value="0.84">일반임기제 · 84%</option></select><div class="hint">선택한 비율에 지급률 86%가 추가로 적용됩니다.</div></div>
+          <div class="field"><label for="annualRate">보수 유형</label><select id="annualRate"><option value="0.84" selected>일반임기제 · 84%</option><option value="0.78">일반직 연봉제(5급 이상) · 78%</option></select><div class="hint">선택한 비율에 지급률 86%가 추가로 적용됩니다.</div></div>
         </div>
         <div id="partFields" class="hidden">
           <div class="field"><label for="partAnnual">성과연봉 제외 연봉</label><div class="input-wrap"><input id="partAnnual" inputmode="numeric" placeholder="연간 금액"><span class="unit">원</span></div></div>
           <div class="field"><label for="partAppliedRate">적용률</label><input id="partAppliedRate" value="84% × 86%" readonly></div>
           <div class="field"><label for="weeklyHours">주당 근무시간</label><div class="input-wrap"><input id="weeklyHours" type="number" min="1" max="40" step="1" value="35"><span class="unit">시간</span></div></div>
         </div>
-        <div class="field" id="daysField"><label for="days">연가보상일수</label><div class="input-wrap"><input id="days" type="number" min="0" max="20" step="0.125" value="10"><span class="unit">일</span></div><div class="hint">기관에서 확정한 보상 대상 일수를 입력하세요. 최대 20일.</div></div>
+        <div class="field" id="daysField"><label for="days">연가보상일수</label><div class="input-wrap"><input id="days" type="number" min="0" max="20" step="0.125" value="16"><span class="unit">일</span></div><div class="hint">기관에서 확정한 보상 대상 일수를 입력하세요. 최대 20일.</div></div>
         <div class="field hidden" id="hoursField"><label for="leaveHours">연가보상시간</label><div class="input-wrap"><input id="leaveHours" type="number" min="0" max="160" step="1" value="70"><span class="unit">시간</span></div><div class="hint">미사용 연가의 보상 대상 시간을 입력하세요.</div></div>
         <div class="actions"><button class="primary" type="submit">▶ 계산하기</button><button class="secondary" id="resetBtn" type="button">초기화</button></div>
       </form></section>
@@ -68,7 +68,7 @@ const pay={
 };
 let mode='regular';
 const $=s=>document.querySelector(s),fmt=n=>Math.floor(Number(n)||0).toLocaleString('ko-KR')+'원',num=v=>Number(String(v||'').replace(/[^0-9.]/g,''))||0;
-function updateSteps(){const grade=$('#grade').value,current=Number($('#step').value)||1;$('#step').innerHTML=pay[grade].map((_,i)=>`<option value="${i+1}">${i+1}호봉</option>`).join('');$('#step').value=Math.min(current,pay[grade].length);updateSalary()}
+function updateSteps(){const grade=$('#grade').value,current=Number($('#step').value)||10;$('#step').innerHTML=pay[grade].map((_,i)=>`<option value="${i+1}">${i+1}호봉</option>`).join('');$('#step').value=Math.min(current,pay[grade].length);updateSalary()}
 function updateSalary(){const value=pay[$('#grade').value][Number($('#step').value)-1];$('#salary').value=value.toLocaleString('ko-KR')}
 function setMode(next){mode=next;document.querySelectorAll('.tab').forEach(b=>{const on=b.dataset.mode===mode;b.classList.toggle('active',on);b.setAttribute('aria-selected',on)});$('#regularFields').classList.toggle('hidden',mode!=='regular');$('#termFields').classList.toggle('hidden',mode!=='term');$('#partFields').classList.toggle('hidden',mode!=='part');$('#daysField').classList.toggle('hidden',mode==='part');$('#hoursField').classList.toggle('hidden',mode!=='part');clearResult()}
 function clearResult(){$('#resultAmount').textContent='0원';$('#baseAmount').textContent='-';$('#rateText').textContent='-';$('#unitAmount').textContent='-';$('#leaveAmount').textContent='-';$('#formula').innerHTML='<b>계산 과정</b>정보를 입력하고 계산하기를 눌러주세요.'}
