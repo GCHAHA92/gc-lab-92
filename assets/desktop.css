@@ -29,6 +29,8 @@ body.gc-desktop-page::after{
   mix-blend-mode:multiply;
 }
 
+body.gc-desktop-page.gc-clean-screen::after{display:none}
+
 .gc-shell-shortcuts{
   position:fixed;
   z-index:70;
