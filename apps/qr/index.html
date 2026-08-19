@@ -39,7 +39,7 @@
     textarea,input[type="text"],input[type="number"],input[type="color"],select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:6px;background:#fff;color:#111827;font-size:13px;line-height:1.45;outline:none;}
     input[type="color"]{padding:4px;height:40px;cursor:pointer;}
     textarea:focus,input:focus,select:focus{border-color:#8ab4f8;}
-    .url-input{height:118px;resize:none;}
+    .url-input{height:72px;resize:none;}
     .field{margin-bottom:8px;min-width:0;}
     .field:last-child{margin-bottom:0;}
     .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
@@ -143,15 +143,15 @@
                 </div>
                 <div class="field">
                   <label for="frameThickness">테두리 두께(px)</label>
-                  <input id="frameThickness" type="number" min="0" step="1" value="12" />
+                  <input id="frameThickness" type="number" min="0" step="1" value="10" />
                 </div>
                 <div class="field">
                   <label for="frameRadius">모서리 둥글기(px)</label>
-                  <input id="frameRadius" type="number" min="0" step="1" value="28" />
+                  <input id="frameRadius" type="number" min="0" step="1" value="20" />
                 </div>
                 <div class="field">
                   <label for="innerPadding">안쪽 여백(px)</label>
-                  <input id="innerPadding" type="number" min="0" step="1" value="28" />
+                  <input id="innerPadding" type="number" min="0" step="1" value="10" />
                 </div>
               </div>
             </div>
@@ -2619,9 +2619,9 @@ var qrcode = function() {
       try{
         const qrSize = clampNumber(qrSizeEl.value, 160, 2000, 250);
         const qrMargin = clampNumber(qrMarginEl.value, 0, 20, 1);
-        const frameThickness = clampNumber(frameThicknessEl.value, 0, 80, 12);
-        const frameRadius = clampNumber(frameRadiusEl.value, 0, 120, 28);
-        const innerPadding = clampNumber(innerPaddingEl.value, 0, 150, 28);
+        const frameThickness = clampNumber(frameThicknessEl.value, 0, 80, 10);
+        const frameRadius = clampNumber(frameRadiusEl.value, 0, 120, 20);
+        const innerPadding = clampNumber(innerPaddingEl.value, 0, 150, 10);
         const frameColor = frameColorEl.value || '#0056b8';
         const frameMode = frameModeEl.value || 'gradient';
         frameColorEl.disabled = frameMode === 'gradient';
@@ -2682,7 +2682,7 @@ var qrcode = function() {
         previewCanvas.width = canvas.width;
         previewCanvas.height = canvas.height;
         previewCanvas.getContext('2d').drawImage(canvas, 0, 0);
-        setStatus('success', '옵션이 자동 반영되었습니다.');
+        setStatus('', '');
       }catch(error){
         console.error(error);
         resultBox.innerHTML = '<div class="result-empty">QR코드 생성 중 오류가 발생했습니다.</div>';
@@ -2738,9 +2738,9 @@ var qrcode = function() {
       urlTextEl.value = 'https://www.geumcheon.go.kr/portal/index.do';
       frameModeEl.value = 'gradient';
       frameColorEl.value = '#0056b8';
-      frameThicknessEl.value = 12;
-      frameRadiusEl.value = 28;
-      innerPaddingEl.value = 28;
+      frameThicknessEl.value = 10;
+      frameRadiusEl.value = 20;
+      innerPaddingEl.value = 10;
       qrSizeEl.value = 250;
       qrMarginEl.value = 1;
       errorLevelEl.value = 'M';
