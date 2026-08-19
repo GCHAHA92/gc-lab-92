@@ -1,0 +1,150 @@
+:root{
+  --gc-cream:#fff8df;
+  --gc-ink:#191c1b;
+  --gc-yellow:#ffd84d;
+  --gc-grey:#d8d4c7;
+}
+
+body.gc-desktop-page{
+  min-height:100dvh;
+  padding-bottom:47px;
+  overflow-x:hidden;
+  background-color:#164a43;
+  background-image:
+    linear-gradient(45deg,#ffffff0a 25%,transparent 25%),
+    linear-gradient(-45deg,#ffffff0a 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,#ffffff0a 75%),
+    linear-gradient(-45deg,transparent 75%,#ffffff0a 75%);
+  background-size:28px 28px;
+  background-position:0 0,0 14px,14px -14px,-14px 0;
+}
+
+body.gc-desktop-page::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:100;
+  pointer-events:none;
+  background:repeating-linear-gradient(0deg,#0000 0 3px,#00130e12 3px 4px);
+  mix-blend-mode:multiply;
+}
+
+.gc-shell-shortcuts{
+  position:fixed;
+  z-index:70;
+  top:28px;
+  left:25px;
+  width:86px;
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.gc-shell-shortcut{
+  padding:0;
+  border:0;
+  background:none;
+  color:#fff;
+  text-align:center;
+  text-shadow:2px 2px #000;
+  font:900 11px "Courier New","Malgun Gothic",monospace;
+  cursor:pointer;
+}
+
+.gc-shell-shortcut-icon{
+  display:grid;
+  place-items:center;
+  width:56px;
+  height:56px;
+  margin:0 auto 7px;
+  border:2px solid #fff;
+  border-radius:8px;
+  background:#ffffff66;
+  box-shadow:3px 3px #152b27;
+  font-size:31px;
+}
+
+.gc-shell-shortcut-icon img{
+  display:block;
+  width:46px;
+  height:46px;
+  object-fit:contain;
+}
+
+.gc-shell-shortcut:hover .gc-shell-shortcut-icon,
+.gc-shell-shortcut:focus-visible .gc-shell-shortcut-icon{
+  background:var(--gc-yellow);
+  transform:translateY(-2px);
+}
+
+.gc-shell-taskbar{
+  position:fixed;
+  z-index:110;
+  left:0;
+  right:0;
+  bottom:0;
+  height:47px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 6px;
+  background:#d3cfc2;
+  border-top:3px solid #fff;
+  box-shadow:0 -3px var(--gc-ink);
+  color:var(--gc-ink);
+  font-family:"Courier New","Malgun Gothic",monospace;
+}
+
+.gc-shell-start{
+  height:34px;
+  padding:0 13px;
+  border:3px solid var(--gc-ink);
+  background:var(--gc-yellow);
+  box-shadow:inset 2px 2px #fff,inset -2px -2px #8b7b31;
+  color:var(--gc-ink);
+  font:1000 14px "Courier New",monospace;
+  cursor:pointer;
+}
+
+.gc-shell-task{
+  height:34px;
+  max-width:280px;
+  padding:7px 11px;
+  overflow:hidden;
+  border:2px solid var(--gc-ink);
+  background:#eee;
+  box-shadow:inset 2px 2px #777;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.gc-shell-clock{
+  min-width:86px;
+  margin-left:auto;
+  padding:7px 8px;
+  border:2px solid #777;
+  background:#eee;
+  text-align:center;
+  font-weight:900;
+}
+
+.gc-shell-toast{
+  position:fixed;
+  z-index:120;
+  right:18px;
+  bottom:69px;
+  max-width:330px;
+  padding:13px 16px;
+  border:3px solid var(--gc-ink);
+  background:var(--gc-yellow);
+  box-shadow:6px 6px #0a2824;
+  color:var(--gc-ink);
+  font:900 13px/1.45 "Malgun Gothic",sans-serif;
+  transform:translateX(120%);
+  transition:.2s;
+}
+
+.gc-shell-toast.show{transform:translateX(0)}
+
+@media(max-width:1450px){.gc-shell-shortcuts{display:none}}
+@media(max-width:720px){.gc-shell-task{max-width:calc(100vw - 190px)}.gc-shell-clock{min-width:72px;font-size:12px}}
