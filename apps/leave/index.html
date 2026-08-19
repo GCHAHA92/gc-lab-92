@@ -17,8 +17,9 @@ button,input,select{font:inherit}.desktop{min-height:100dvh;padding:24px 20px 76
 .taskbar{position:fixed;z-index:80;left:0;right:0;bottom:0;height:47px;display:flex;align-items:center;gap:6px;padding:4px 6px;background:#d3cfc2;border-top:3px solid #fff;box-shadow:0 -3px var(--ink)}.start{height:34px;padding:0 13px;border:3px solid var(--ink);background:var(--yellow);font:1000 14px "Courier New"}.task{height:34px;max-width:320px;flex:0 1 auto;padding:7px 11px;border:2px solid var(--ink);background:#eee;box-shadow:inset 2px 2px #777;font-weight:900;overflow:hidden;white-space:nowrap}.clock{margin-left:auto;min-width:86px;padding:7px 8px;border:2px solid #777;background:#eee;text-align:center;font-weight:900}.hidden{display:none!important}
 @media(max-width:720px){.desktop{padding:10px 9px 68px}.content{padding:17px}.workspace{grid-template-columns:1fr}.tabs{grid-template-columns:1fr}.form{height:auto}.field{grid-template-columns:1fr;gap:6px}.hint{grid-column:1;margin-top:-3px}.heading-icon{width:58px;height:58px;flex-basis:58px;font-size:30px}.menubar{gap:12px}.task{max-width:none}.clock{min-width:72px;font-size:12px}}
 </style>
+<link rel="stylesheet" href="../../assets/desktop.css">
 </head>
-<body>
+<body data-gc-root="../../" data-gc-task-icon="💰" data-gc-task-title="연가보상비 계산기">
 <div class="desktop"><main class="window">
   <div class="titlebar"><span class="name">💰 연가보상비 계산기.EXE</span><button class="control" type="button" onclick="location.href='../../'">×</button></div>
   <div class="menubar"><a href="../../">← 홈</a><details class="menu-dropdown"><summary>도움말</summary><div class="dropdown-panel"><a href="./leave-pay-guideline.pdf" target="_blank" rel="noopener">연가보상비 규정</a></div></details></div>
@@ -54,7 +55,6 @@ button,input,select{font:inherit}.desktop{min-height:100dvh;padding:24px 20px 76
     <p class="source">※ 2026년 일반직 봉급표 및 지방공무원 연가보상비 산식을 반영한 참고용 계산기입니다. 실제 지급액과 상이할 수 있습니다.</p>
   </div>
 </main></div>
-<div class="taskbar"><button class="start" onclick="location.href='../../'">▣ START</button><div class="task">💰 연가보상비 계산기</div><div class="clock" id="clock">00:00</div></div>
 <script>
 const pay={
   3:[3781700,3921600,4065700,4210800,4358300,4507200,4658000,4809000,4961400,5113600,5266200,5424200,5571200,5707600,5833400,5950500,6059400,6160700,6254300,6342100,6423300,6498500,6567800,6632800,6685800,6736700,6783800],
@@ -79,6 +79,7 @@ function calculate(e){e?.preventDefault();let base,rate,unit,total,leave;
   $('#resultAmount').textContent=fmt(total);$('#baseAmount').textContent=fmt(base);$('#unitLabel').textContent=mode==='part'?'1시간 보상액':'1일 보상액';$('#unitAmount').textContent=fmt(unit);$('#leaveAmount').textContent=mode==='part'?leave+'시간':leave+'일';
 }
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));$('#grade').addEventListener('change',updateSteps);$('#step').addEventListener('change',updateSalary);$('#calculator').addEventListener('submit',calculate);$('#resetBtn').addEventListener('click',()=>{document.querySelector('#calculator').reset();updateSteps();setMode('regular')});
-function updateClock(){$('#clock').textContent=new Intl.DateTimeFormat('ko-KR',{hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date())}updateSteps();calculate();updateClock();setInterval(updateClock,30000);
+updateSteps();calculate();
 </script>
+<script src="../../assets/desktop.js"></script>
 </body></html>
