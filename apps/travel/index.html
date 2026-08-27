@@ -67,7 +67,7 @@ function expected(r){let n=r._hours<1?0:r._hours<4?10000:20000;if(r['공무용�
 function group(items,keyFn){const m=new Map();items.forEach(x=>{const k=keyFn(x);if(!m.has(k))m.set(k,[]);m.get(k).push(x)});return m}
 function normalize(raw){return raw.map(src=>{const r={...src};r['성명']=String(r['출장자']??r['성명']??'').trim();r['식별번호']=String(r['식별번호']??'').replace(/\.0$/,'').trim();r['신청금액']=money(r['여비']??r['신청여비']);r['공무용차량']=String(r['공무용차량']??'미사용').trim();r['결재상태']=String(r['결재상태']??'').trim();r._start=date(r['출장시작일']??r['시작']);r._end=date(r['출장종료일']??r['종료']);r._day=ymd(r._start);r._endday=ymd(r._end);r._month=r._day.slice(0,7);r._hours=hours(r['총출장시간']);r['총시간']=r._hours;r['계산금액']=expected(r);return r})}
 function detect(rows){const daily=group(rows,r=>`${r['성명']}|${r['식별번호']}|${r._day}`);daily.forEach(a=>{const sum=a.reduce((s,r)=>s+r['신청금액'],0);a.forEach(r=>r['일자별신청합계']=sum)});const periods=group(rows,r=>`${r['성명']}|${r['식별번호']}|${r._day}|${r._start&&r._start.getHours()<12?'오전':'오후'}`),duplicatePeriod=new Set();periods.forEach(a=>{if(a.length>1)a.forEach(r=>duplicatePeriod.add(r))});const errors=Object.fromEntries(TYPES.map(([k])=>[k,[]])),checks=Object.fromEntries(CHECKS.map(([k])=>[k,[]]));rows.forEach(r=>{const apply=r['신청금액'],calc=r['계산금액'],h=r._hours,car=r['공무용차량'];const carWrong=car==='사용'&&apply>calc,under4=h<4&&apply===20000&&!carWrong,more=apply>calc&&!carWrong&&!under4,under=apply<calc,dailyOver=r['일자별신청합계']>20000;const sd=r._start?.getDay(),ed=r._end?.getDay(),holiday=(sd===0||sd===6||ed===0||ed===6||HOLIDAYS.has(r._day)||HOLIDAYS.has(r._endday));const sm=r._start?r._start.getHours()*60+r._start.getMinutes():0,em=r._end?r._end.getHours()*60+r._end.getMinutes():0;const outside=!holiday&&r._start&&r._end&&(sm<540||em>1080||r._day!==r._endday);if(more){r['오류유형']=`여비신청(${fmt(apply)}) > 계산금액(${fmt(calc)})`;errors[TYPES[0][0]].push({...r})}if(under4){r['오류유형']='4시간 미만인데 20,000원 신청';errors[TYPES[1][0]].push({...r})}if(carWrong){r['오류유형']=`공무용차량 사용 시 감액 오류 (신청:${fmt(apply)}, 계산:${fmt(calc)})`;errors[TYPES[2][0]].push({...r})}if(dailyOver){r['오류유형']=`같은 날 합계 여비신청(${fmt(r['일자별신청합계'])}) > 20,000원`;errors[TYPES[3][0]].push({...r})}if(outside){r['확인사항']=`평일 정규근무시간 외 출장 (${datetime(r._start)} ~ ${datetime(r._end)})`;checks[CHECKS[3][0]].push({...r})}if(under){r['확인사항']=`과소신청 (신청:${fmt(apply)}, 계산:${fmt(calc)})`;checks[CHECKS[0][0]].push({...r})}if(duplicatePeriod.has(r)){r['확인사항']=`같은 날 ${r._start&&r._start.getHours()<12?'오전':'오후'} 출장 2건 이상`;checks[CHECKS[1][0]].push({...r})}if(holiday){r['확인사항']=`${HOLIDAYS.get(r._day)||HOLIDAYS.get(r._endday)||(sd===6||ed===6?'토요일':'일요일')} 출장 기록 (${datetime(r._start)} ~ ${datetime(r._end)})`;checks[CHECKS[2][0]].push({...r})}});return{errors,checks}}
-function summary(rows){const valid=rows.filter(r=>r['성명']&&r._day&&r._month);const groups=group(valid,r=>`${r['성명']}|${r['식별번호']}|${r._month}`),out=[];function calcAmount(items){const days=group(items,r=>r._day);let total=0;days.forEach(day=>{const periods=group(day,r=>r._start&&r._start.getHours()<12?'오전':'오후');let d=0;periods.forEach(p=>d+=Math.max(...p.map(r=>r['계산금액'])));total+=Math.min(d,20000)});return Math.min(total,280000)}groups.forEach(a=>{const payRows=a.filter(r=>r['결재상태']!=='미전송'),all=calcAmount(a),paid=calcAmount(payRows);if(!all&&!paid)return;const r=a[0];out.push({'성명':r['성명'],'식별번호':r['식별번호'],'정산월':`${r._start.getFullYear()}년 ${r._start.getMonth()+1}월`,'출장건수':payRows.length,'4시간 미만':payRows.filter(x=>x._hours<4).length,'4시간 이상':payRows.filter(x=>x._hours>=4).length,'차량사용':payRows.filter(x=>x['공무용차량']==='사용').length,'미전송 제외 금액(원)':paid,'미전송 포함 금액(원)':all,'미전송 차액(원)':all-paid})});return out.sort((a,b)=>a['정산월'].localeCompare(b['정산월'])||a['성명'].localeCompare(b['성명']))}
+function summary(rows){const valid=rows.filter(r=>r['성명']&&r._day&&r._month);const groups=group(valid,r=>`${r['성명']}|${r['식별번호']}|${r._month}`),out=[];function calcAmount(items){const days=group(items,r=>r._day);let total=0;days.forEach(day=>{const periods=group(day,r=>r._start&&r._start.getHours()<12?'오전':'오후');let d=0;periods.forEach(p=>d+=Math.max(...p.map(r=>r['계산금액'])));total+=Math.min(d,20000)});return Math.min(total,280000)}groups.forEach(a=>{const payRows=a.filter(r=>r['결재상태']!=='미전송'),all=calcAmount(a),paid=calcAmount(payRows);if(!all&&!paid)return;const r=a[0];out.push({'성명':r['성명'],'식별번호':r['식별번호'],'정산월':`${r._start.getFullYear()}년 ${r._start.getMonth()+1}월`,'출장건수':payRows.length,'4시간 미만':payRows.filter(x=>x._hours<4).length,'4시간 이상':payRows.filter(x=>x._hours>=4).length,'차량사용':payRows.filter(x=>x['공무용차량']==='사용').length,'미전송 제외 금액(원)':paid,'미전송 포함 금액(원)':all})});return out.sort((a,b)=>a['정산월'].localeCompare(b['정산월'])||a['성명'].localeCompare(b['성명']))}
 function publicRow(r){const x={};Object.entries(r).forEach(([k,v])=>{if(k.startsWith('_'))return;x[k]=v instanceof Date?datetime(v):v});return x}
 function displayValue(column,value){if(typeof value==='number'&&/(금액|여비|합계|건수|횟수|총시간|시간$)/.test(column))return fmt(value);return value}
 function table(items){if(!items.length)return'<div class="empty">✓ 표시할 데이터가 없습니다.</div>';const cols=Object.keys(items[0]).filter(k=>!k.startsWith('_'));return`<table><thead><tr>${cols.map((c,i)=>`<th class="sortable" data-col="${i}" aria-sort="none" title="클릭하여 정렬">${esc(c)}</th>`).join('')}</tr></thead><tbody>${items.map(r=>`<tr>${cols.map(c=>`<td data-sort-value="${esc(typeof r[c]==='number'?r[c]:String(r[c]??''))}">${esc(displayValue(c,r[c]))}</td>`).join('')}</tr>`).join('')}</tbody></table>`}
@@ -77,7 +77,7 @@ function render(){const errorCount=Object.values(result.errors).reduce((s,a)=>s+
 function exportExcel(){
  const wb=XLSX.utils.book_new();
  wb.Props={Title:'여비정산 오류점검결과',Subject:'출장여비 정산 및 오류유형 점검',Author:'GC LAB 92'};
- const sumHeader=['성명','식별번호','정산월','출장건수','4시간 미만','4시간 이상','차량사용','미전송 제외 금액(원)','미전송 포함 금액(원)','미전송 차액(원)'];
+ const sumHeader=['성명','식별번호','정산월','출장건수','4시간 미만','4시간 이상','차량사용','미전송 제외 금액(원)','미전송 포함 금액(원)'];
  const guide=[
   ['점검 개요','',''],
   ['정산기준','출장시간·공무용차량 사용 여부에 따른 지급가능액 산정','1일 최대 20,000원 / 월 최대 280,000원'],
@@ -91,16 +91,16 @@ function exportExcel(){
   ['확인3','주말·공휴일 출장','토요일·일요일·공휴일에 출장 기록이 있는 경우'],
   ['미전송','결재상태가 미전송인 출장','미전송 제외 금액 산정에서는 제외']
  ];
- const aoa=[['월별 여비 정산 요약'],['※ 미전송 제외·포함 금액을 각각 산정하며, 차액은 두 금액의 차이입니다.'],[],sumHeader,...result.summary.map(r=>sumHeader.map(h=>r[h]??''))];
+ const aoa=[['월별 여비 정산 요약'],['※ 결재상태가 미전송인 건을 제외한 금액과 포함한 금액을 각각 산정합니다.'],[],sumHeader,...result.summary.map(r=>sumHeader.map(h=>r[h]??''))];
  const ws=XLSX.utils.aoa_to_sheet(aoa);
  XLSX.utils.sheet_add_aoa(ws,guide,{origin:'M1'});
  const errorStart=Math.max(14,6+result.summary.length);
  XLSX.utils.sheet_add_aoa(ws,[['점검 결과 요약'],['구분','건수'],...TYPES.map(([k,l])=>[`오류 - ${l}`,result.errors[k].length]),...CHECKS.map(([k,l])=>[`확인 - ${l}`,result.checks[k].length])],{origin:`A${errorStart}`});
- ws['!merges']=[XLSX.utils.decode_range('A1:J1'),XLSX.utils.decode_range('A2:J2'),XLSX.utils.decode_range('M1:O1'),XLSX.utils.decode_range(`A${errorStart}:B${errorStart}`)];
- ws['!cols']=[{wch:12},{wch:14},{wch:13},{wch:10},{wch:12},{wch:12},{wch:10},{wch:20},{wch:20},{wch:18},{wch:3},{wch:3},{wch:12},{wch:39},{wch:47}];
+ ws['!merges']=[XLSX.utils.decode_range('A1:I1'),XLSX.utils.decode_range('A2:I2'),XLSX.utils.decode_range('M1:O1'),XLSX.utils.decode_range(`A${errorStart}:B${errorStart}`)];
+ ws['!cols']=[{wch:12},{wch:14},{wch:13},{wch:10},{wch:12},{wch:12},{wch:10},{wch:20},{wch:20},{wch:3},{wch:3},{wch:3},{wch:12},{wch:39},{wch:47}];
  ws['!rows']=[{hpt:24},{hpt:22}];
  ws['!views']=[{showGridLines:false}];
- ws['!autofilter']={ref:`A4:J${Math.max(4,4+result.summary.length)}`};
+ ws['!autofilter']={ref:`A4:I${Math.max(4,4+result.summary.length)}`};
  ws['!freeze']={xSplit:0,ySplit:4,topLeftCell:'A5',activePane:'bottomLeft',state:'frozen'};
  const navy='1F4E78',blue='5B9BD5',paleBlue='DDEBF7',paleYellow='FFF2CC',white='FFFFFF',ink='1F1F1F',line='B4C6E7';
  const thin={style:'thin',color:{rgb:line}},allBorders={top:thin,bottom:thin,left:thin,right:thin};
@@ -112,13 +112,13 @@ function exportExcel(){
  const bodyStyle={font:{name:'맑은 고딕',sz:9,color:{rgb:ink}},alignment:{vertical:'center'},border:allBorders};
  const bandStyle={...bodyStyle,fill:{patternType:'solid',fgColor:{rgb:'F5F9FC'}}};
  function styleRange(sheet,ref,style){const range=XLSX.utils.decode_range(ref);for(let r=range.s.r;r<=range.e.r;r++)for(let c=range.s.c;c<=range.e.c;c++){const addr=XLSX.utils.encode_cell({r,c});if(!sheet[addr])sheet[addr]={t:'s',v:''};sheet[addr].s=style}}
- styleRange(ws,'A1:J1',titleStyle);styleRange(ws,'A2:J2',noteStyle);styleRange(ws,'A4:J4',headerStyle);
- for(let row=5;row<5+result.summary.length;row++)styleRange(ws,`A${row}:J${row}`,row%2?bodyStyle:bandStyle);
+ styleRange(ws,'A1:I1',titleStyle);styleRange(ws,'A2:I2',noteStyle);styleRange(ws,'A4:I4',headerStyle);
+ for(let row=5;row<5+result.summary.length;row++)styleRange(ws,`A${row}:I${row}`,row%2?bodyStyle:bandStyle);
  styleRange(ws,'M1:O1',titleStyle);styleRange(ws,'M2:O2',noteStyle);
  for(let row=3;row<=10;row++){styleRange(ws,`M${row}`,labelStyle);styleRange(ws,`N${row}:O${row}`,row%2?bodyStyle:bandStyle)}
  styleRange(ws,`A${errorStart}:B${errorStart}`,sectionStyle);styleRange(ws,`A${errorStart+1}:B${errorStart+1}`,headerStyle);
  for(let row=errorStart+2;row<errorStart+2+TYPES.length+CHECKS.length;row++)styleRange(ws,`A${row}:B${row}`,row%2?bodyStyle:bandStyle);
- for(let row=5;row<5+result.summary.length;row++)for(const col of ['H','I','J'])if(ws[col+row])ws[col+row].z='#,##0';
+ for(let row=5;row<5+result.summary.length;row++)for(const col of ['H','I'])if(ws[col+row])ws[col+row].z='#,##0';
  for(let row=errorStart+2;row<errorStart+2+TYPES.length+CHECKS.length;row++)if(ws[`B${row}`])ws[`B${row}`].z='#,##0';
  XLSX.utils.book_append_sheet(wb,ws,'요약');
  TYPES.forEach(([k])=>{
