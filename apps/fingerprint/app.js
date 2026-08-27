@@ -8,6 +8,12 @@ let activeFilter = "failed";
 let searchText = "";
 let sortState = { key: "name", direction: 1 };
 
+function setNotice(message, tone = "") {
+  const notice = $("#notice");
+  notice.className = `notice${tone ? ` ${tone}` : ""}`;
+  notice.innerHTML = `${escapeHtml(message)} <span class="cursor"></span>`;
+}
+
 function normalizeText(value) {
   return String(value ?? "").trim().replace(/\s+/g, " ");
 }
@@ -320,8 +326,7 @@ function render() {
   $("#missingCount").textContent = analysis.middleMissingPersonCount.toLocaleString();
   $("#boundaryCount").textContent = analysis.boundaryIssueCount.toLocaleString();
   $("#dataNeededCount").textContent = analysis.dataNeededCount.toLocaleString();
-  $("#notice").className = "notice ok";
-  $("#notice").textContent = `점검 완료: ${analysis.totalCount.toLocaleString()}명 중 ${analysis.failCount.toLocaleString()}명 확인 필요 · 중간지문 누락 ${analysis.middleMissingPersonCount.toLocaleString()}명 · 출퇴근 확인 ${analysis.boundaryIssueCount.toLocaleString()}명`;
+  setNotice(`점검 완료: ${analysis.totalCount.toLocaleString()}명 중 ${analysis.failCount.toLocaleString()}명 확인 필요 · 중간지문 누락 ${analysis.middleMissingPersonCount.toLocaleString()}명 · 출퇴근 확인 ${analysis.boundaryIssueCount.toLocaleString()}명`, "ok");
   $("#results").classList.remove("hidden");
   renderTable();
   $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -330,8 +335,7 @@ function render() {
 async function runAnalysis() {
   if (!files.attendance || !files.fingerprint) return;
   $("#run").disabled = true;
-  $("#notice").className = "notice";
-  $("#notice").textContent = "두 파일을 읽고 지문기록을 비교하고 있습니다...";
+  setNotice("두 파일을 읽고 지문기록을 비교하고 있습니다...");
   try {
     const [attendanceRows, fingerprintRows] = await Promise.all([readRows(files.attendance), readRows(files.fingerprint)]);
     const attendance = parseAttendance(attendanceRows);
@@ -339,8 +343,7 @@ async function runAnalysis() {
     analysis = compare(attendance, fingerprints);
     render();
   } catch (error) {
-    $("#notice").className = "notice error";
-    $("#notice").textContent = error.message || "파일을 점검하지 못했습니다.";
+    setNotice(error.message || "파일을 점검하지 못했습니다.", "error");
     $("#results").classList.add("hidden");
   } finally {
     $("#run").disabled = false;
@@ -356,8 +359,7 @@ function setFile(kind, file) {
   $(`#${prefix}Label`).textContent = file.name;
   $(`#${prefix}Drop`).classList.add("ready");
   $("#run").disabled = !(files.attendance && files.fingerprint);
-  $("#notice").className = "notice";
-  $("#notice").textContent = files.attendance && files.fingerprint ? "두 파일이 준비되었습니다. 비교하기를 눌러주세요." : "나머지 파일도 선택해주세요.";
+  setNotice(files.attendance && files.fingerprint ? "두 파일이 준비되었습니다. 비교하기를 눌러주세요." : "나머지 파일도 선택해주세요.");
 }
 
 function setupUpload(kind, inputSelector, dropSelector) {

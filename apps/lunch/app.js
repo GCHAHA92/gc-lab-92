@@ -483,20 +483,19 @@ async function spinCard(card, index, pool, finalPlace, duration, jackpot) {
   card.innerHTML = reelMarkup(pool, finalPlace, index, jackpot);
   const stage = card.querySelector('.reel-stage');
 
+  const turns = reduceMotion ? 1 : 5 + index;
+  const spinDuration = reduceMotion ? 500 + index * 100 : duration;
+  stage.style.setProperty('--spin-duration', `${spinDuration}ms`);
+  stage.style.setProperty('--spin-end', `-${turns * 360}deg`);
+  void stage.offsetWidth;
+  stage.classList.add('is-spinning');
   if (!reduceMotion) {
-    const turns = 5 + index;
-    stage.style.setProperty('--spin-duration', `${duration}ms`);
-    stage.style.setProperty('--spin-end', `-${turns * 360}deg`);
-    void stage.offsetWidth;
-    stage.classList.add('is-spinning');
     window.setTimeout(() => card.classList.add('is-braking'), Math.max(0, duration - 700));
-    await Promise.race([
-      new Promise(resolve => stage.addEventListener('animationend', resolve, { once:true })),
-      wait(duration + 150),
-    ]);
-  } else {
-    await wait(80 + index * 70);
   }
+  await Promise.race([
+    new Promise(resolve => stage.addEventListener('animationend', resolve, { once:true })),
+    wait(spinDuration + 150),
+  ]);
 
   card.className = `place-card landed${jackpot ? ' jackpot-card' : ''}`;
   card.innerHTML = cardMarkup(finalPlace, index, jackpot);
