@@ -239,6 +239,9 @@ function compare(attendance, fingerprints) {
     failCount: rows.filter((row) => !row.ok).length,
     requiredCount: rows.reduce((sum, row) => sum + row.requiredCount, 0),
     missingCount: rows.reduce((sum, row) => sum + row.missingCount, 0),
+    middleMissingPersonCount: new Set(
+      rows.filter((row) => row.missingCount > 0).map((row) => row.id || row.name),
+    ).size,
     middleFailCount: rows.filter((row) => !row.middleOk).length,
     boundaryIssueCount: rows.filter((row) => row.boundaryIssueCount > 0).length,
     dataNeededCount: rows.filter((row) => row.dataNeededCount > 0).length,
@@ -314,11 +317,11 @@ function render() {
   $("#totalCount").textContent = analysis.totalCount.toLocaleString();
   $("#passCount").textContent = analysis.passCount.toLocaleString();
   $("#failCount").textContent = analysis.failCount.toLocaleString();
-  $("#missingCount").textContent = analysis.missingCount.toLocaleString();
+  $("#missingCount").textContent = analysis.middleMissingPersonCount.toLocaleString();
   $("#boundaryCount").textContent = analysis.boundaryIssueCount.toLocaleString();
   $("#dataNeededCount").textContent = analysis.dataNeededCount.toLocaleString();
   $("#notice").className = "notice ok";
-  $("#notice").textContent = `점검 완료: ${analysis.totalCount.toLocaleString()}명 중 ${analysis.failCount.toLocaleString()}명 확인 필요 · 중간지문 누락 ${analysis.missingCount.toLocaleString()}개 · 출퇴근 확인 ${analysis.boundaryIssueCount.toLocaleString()}명`;
+  $("#notice").textContent = `점검 완료: ${analysis.totalCount.toLocaleString()}명 중 ${analysis.failCount.toLocaleString()}명 확인 필요 · 중간지문 누락 ${analysis.middleMissingPersonCount.toLocaleString()}명 · 출퇴근 확인 ${analysis.boundaryIssueCount.toLocaleString()}명`;
   $("#results").classList.remove("hidden");
   renderTable();
   $("#results").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -449,6 +452,7 @@ function exportExcel() {
     ["최종 정상", analysis.passCount],
     ["최종 확인 필요", analysis.failCount],
     ["필요 지문 구간", analysis.requiredCount],
+    ["중간지문 누락 인원", analysis.middleMissingPersonCount],
     ["중간지문 누락 구간", analysis.missingCount],
     ["출퇴근 확인 인원", analysis.boundaryIssueCount],
     ["익일자료 필요 인원", analysis.dataNeededCount],
