@@ -12,7 +12,7 @@
   shortcuts.className = 'gc-shell-shortcuts';
   shortcuts.setAttribute('aria-label', '바탕화면 바로가기');
   shortcuts.innerHTML = `
-    <button class="gc-shell-shortcut" type="button" data-gc-message="아직 비어 있는 내 문서입니다.">
+    <button class="gc-shell-shortcut" type="button" data-gc-home>
       <span class="gc-shell-shortcut-icon">📁</span><span>MY_TOOLS</span>
     </button>
     <button class="gc-shell-shortcut" type="button" data-gc-message="새올행정시스템 바로가기입니다.">
@@ -44,6 +44,9 @@
     toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
   };
 
+  shortcuts.querySelector('[data-gc-home]').addEventListener('click', () => {
+    location.href = 'https://gchaha92.github.io/gc-lab-92/';
+  });
   shortcuts.querySelectorAll('[data-gc-message]').forEach(button => {
     button.addEventListener('click', () => showToast(button.dataset.gcMessage));
   });

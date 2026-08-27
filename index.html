@@ -23,7 +23,7 @@ body:after{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;bac
 <body>
 <div class="desktop">
   <div class="shortcuts">
-    <button class="shortcut" data-msg="아직 비어 있는 내 문서입니다."><span>📁</span><small>MY_TOOLS</small></button>
+    <button class="shortcut" id="myToolsShortcut"><span>📁</span><small>MY_TOOLS</small></button>
     <button class="shortcut" data-msg="새올행정시스템 바로가기입니다."><span><img src="./assets/saeol.ico" alt=""></span><small>새올</small></button>
     <button class="shortcut" data-msg="삭제된 아이디어도 언젠가 부활할 수 있습니다."><span>🗑️</span><small>TRASH</small></button>
   </div>
@@ -49,9 +49,6 @@ body:after{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;bac
         <a class="app" href="./apps/leave/">
           <div class="app-icon">💰</div><div><h3>연가보상비 계산기</h3><p>직급·호봉과 미사용 연가로 예상 지급액 계산</p></div><span class="status live">사용 가능</span>
         </a>
-        <article class="app pending" tabindex="0" data-msg="퇴근 대시는 완성도가 부족해 봉인되었습니다.">
-          <div class="app-icon">🔒</div><div><h3>퇴근 대시</h3><p>완성도가 부족해 잠가둔 프로그램</p></div><span class="status dead">잠김</span>
-        </article>
         <a class="app" href="./apps/qr/">
           <div class="app-icon">▦</div><div><h3>QR코드 생성기</h3><p>주소를 QR 이미지로 만들고 복사·다운로드</p></div><span class="status live">사용 가능</span>
         </a>
@@ -73,6 +70,7 @@ body:after{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;bac
 <div class="toast" id="toast">준비 중입니다.</div>
 <script>
 const toast=document.querySelector('#toast');
+document.querySelector('#myToolsShortcut').addEventListener('click',()=>location.href='https://gchaha92.github.io/gc-lab-92/');
 const appsGrid=document.querySelector('.apps'),appItems=[...appsGrid.children],pageSize=4,pageCount=Math.ceil(appItems.length/pageSize);let appPage=0;
 function renderAppPage(nextPage){const previousPage=appPage,targetPage=Math.max(0,Math.min(nextPage,pageCount-1));appPage=targetPage;appItems.forEach((item,index)=>item.hidden=Math.floor(index/pageSize)!==appPage);document.querySelector('#pageLabel').textContent=`${appPage+1} / ${pageCount}`;document.querySelector('#prevApps').disabled=appPage===0;document.querySelector('#nextApps').disabled=appPage===pageCount-1;appsGrid.classList.remove('page-next','page-prev');void appsGrid.offsetWidth;if(targetPage!==previousPage)appsGrid.classList.add(targetPage>previousPage?'page-next':'page-prev')}
 if(pageCount>1){document.querySelector('#appPager').hidden=false;document.querySelector('#prevApps').addEventListener('click',()=>renderAppPage(appPage-1));document.querySelector('#nextApps').addEventListener('click',()=>renderAppPage(appPage+1))}renderAppPage(0);
