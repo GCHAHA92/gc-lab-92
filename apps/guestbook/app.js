@@ -216,7 +216,10 @@
     $('#dialogTitle').textContent = mode === 'edit' ? '글 수정' : '글 삭제';
     $('#dialogSubmit').textContent = mode === 'edit' ? '저장' : '삭제';
     $('#dialogSubmit').classList.toggle('danger', mode === 'delete');
-    $('#editFields').classList.toggle('hidden', mode === 'delete');
+    const editFields = $('#editFields');
+    const isEdit = mode === 'edit';
+    editFields.classList.toggle('hidden', !isEdit);
+    editFields.querySelectorAll('input,textarea').forEach(field => { field.disabled = !isEdit; });
     if (mode === 'edit') {
       if (entry.is_secret && !entry.unlocked) {
         setStatus('비밀글 내용을 먼저 연 뒤 수정해주세요.', 'error');
