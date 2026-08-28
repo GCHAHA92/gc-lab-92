@@ -9,17 +9,17 @@
 ## 2. 방명록 DB 만들기
 
 1. Supabase Dashboard의 **SQL Editor**를 엽니다.
-2. `guestbook.sql` 전체 내용을 붙여넣고 실행합니다.
+2. `migrations/20260828_0001_guestbook.sql` 전체 내용을 붙여넣고 실행합니다.
 3. 오류 없이 완료됐는지 확인합니다.
 
-## 3. GC LAB에 공개 연결정보 입력하기
+## 3. JISUNG 92에 공개 연결정보 입력하기
 
 Supabase Dashboard의 **Project Settings → API**에서 다음 값을 확인합니다.
 
 - Project URL
 - Publishable key 또는 legacy `anon` key
 
-`apps/guestbook/config.js`에 값을 입력합니다.
+`guestbook/config.js`에 값을 입력합니다.
 
 ```js
 window.GC_SUPABASE = {
