@@ -41,7 +41,7 @@ body.gc-desktop-page.gc-clean-screen::after{display:none}
   width:86px;
   display:flex;
   flex-direction:column;
-  gap:22px;
+  gap:20px;
 }
 
 .gc-shell-shortcut{
@@ -50,6 +50,7 @@ body.gc-desktop-page.gc-clean-screen::after{display:none}
   background:none;
   color:#fff;
   text-align:center;
+  text-decoration:none;
   text-shadow:2px 2px #000;
   font:900 11px "Courier New","Malgun Gothic",monospace;
   cursor:pointer;
@@ -155,5 +156,5 @@ body.gc-desktop-page.gc-clean-screen::after{display:none}
 
 .gc-shell-toast.show{transform:translateX(0)}
 
-@media(max-width:1450px){.gc-shell-shortcuts{display:none}}
+@media(max-width:900px){.gc-shell-shortcuts{display:none}}
 @media(max-width:720px){.gc-shell-task{max-width:calc(100vw - 190px)}.gc-shell-clock{min-width:72px;font-size:12px}}

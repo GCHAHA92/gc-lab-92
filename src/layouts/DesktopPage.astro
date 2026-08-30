@@ -42,6 +42,7 @@ const {
 } = Astro.props;
 
 const stylesheet = sitePath('assets/css/site.css');
+const desktopStylesheet = sitePath('assets/css/desktop.css');
 const siteScript = sitePath('assets/js/site.js');
 const home = sitePath();
 ---
@@ -54,23 +55,24 @@ const home = sitePath();
     <meta name="theme-color" content="#123a35" />
     <meta name="description" content={description} />
     <title>{pageTitle}</title>
+    <link rel="stylesheet" href={desktopStylesheet} />
     <link rel="stylesheet" href={stylesheet} />
     <slot name="head" />
   </head>
   <body>
     <div class="desktop">
       {shortcuts.length > 0 && (
-        <aside class="shortcuts" aria-label="바탕화면 바로가기">
+        <aside class="gc-shell-shortcuts" aria-label="바탕화면 바로가기">
           {shortcuts.map((shortcut) => shortcut.path ? (
-            <a class="shortcut" href={sitePath(shortcut.path)}>
-              <span class="shortcut-icon">
+            <a class="gc-shell-shortcut" href={sitePath(shortcut.path)}>
+              <span class="gc-shell-shortcut-icon">
                 {shortcut.image ? <img src={sitePath(shortcut.image)} alt="" /> : shortcut.icon}
               </span>
               <span>{shortcut.label}</span>
             </a>
           ) : (
-            <button class="shortcut" type="button" data-message={shortcut.message}>
-              <span class="shortcut-icon">
+            <button class="gc-shell-shortcut" type="button" data-message={shortcut.message}>
+              <span class="gc-shell-shortcut-icon">
                 {shortcut.image ? <img src={sitePath(shortcut.image)} alt="" /> : shortcut.icon}
               </span>
               <span>{shortcut.label}</span>
