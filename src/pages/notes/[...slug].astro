@@ -1,0 +1,42 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import DesktopPage from '../../layouts/DesktopPage.astro';
+import Hero from '../../components/Hero.astro';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes', ({ data }) => !data.draft);
+  return notes.map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+
+interface Props { note: CollectionEntry<'notes'>; }
+
+const { note } = Astro.props;
+const { Content } = await render(note);
+const nav = [
+  { label: '← Notes', path: 'notes/' },
+  { label: 'Home', path: '' },
+  { label: 'Tools', path: 'tools/' },
+  { label: 'Guestbook', path: 'guestbook/' },
+];
+
+const published = new Intl.DateTimeFormat('ko-KR', {
+  year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Seoul',
+}).format(note.data.publishedAt);
+---
+
+<DesktopPage
+  pageTitle={`${note.data.title} | JISUNG 92`}
+  description={note.data.description}
+  windowTitle={`📓 ${note.data.title}`}
+  taskTitle={note.data.title}
+  taskIcon="📓"
+  nav={nav}
+>
+  <Hero
+    eyebrow={`★ ${published} ★`}
+    title={note.data.title}
+    lines={[note.data.description]}
+  />
+  <article class="page-panel article-panel"><Content /></article>
+  <div class="terminal"><b>C:\JISUNG_92\NOTES&gt;</b> 메모 읽기 완료. <span class="cursor"></span></div>
+</DesktopPage>

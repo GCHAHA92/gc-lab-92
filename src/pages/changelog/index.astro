@@ -1,0 +1,40 @@
+---
+import DesktopPage from '../../layouts/DesktopPage.astro';
+import Hero from '../../components/Hero.astro';
+import { changelog } from '../../data/changelog';
+
+const nav = [
+  { label: '← Home', path: '' },
+  { label: 'Tools', path: 'tools/' },
+  { label: 'Notes', path: 'notes/' },
+];
+
+const formatDate = (date: string) => date.replaceAll('-', '.');
+---
+
+<DesktopPage
+  pageTitle="CHANGELOG | JISUNG 92"
+  description="JISUNG 92 변경 기록"
+  windowTitle="🧾 CHANGELOG.TXT"
+  taskTitle="CHANGELOG.TXT"
+  taskIcon="🧾"
+  nav={nav}
+>
+  <Hero
+    eyebrow="★ VERSION HISTORY ★"
+    title="CHANGELOG"
+    lines={['고치고 추가한 내용을', '날짜순으로 기록합니다.']}
+  />
+  <section class="page-panel">
+    <h2>▣ RECENT UPDATES</h2>
+    <div class="timeline">
+      {changelog.map((entry) => (
+        <article>
+          <time datetime={entry.date}>{formatDate(entry.date)}</time>
+          <div><h3>{entry.title}</h3><p>{entry.description}</p></div>
+        </article>
+      ))}
+    </div>
+  </section>
+  <div class="terminal"><b>C:\JISUNG_92\CHANGELOG&gt;</b> 계속 업데이트하는 중... <span class="cursor"></span></div>
+</DesktopPage>

@@ -1,0 +1,112 @@
+---
+import { sitePath } from '../lib/paths';
+import '../styles/astro.css';
+
+interface NavItem {
+  label: string;
+  path: string;
+}
+
+interface Shortcut {
+  label: string;
+  icon?: string;
+  image?: string;
+  path?: string;
+  message?: string;
+}
+
+interface Props {
+  pageTitle: string;
+  description: string;
+  windowTitle: string;
+  taskTitle: string;
+  taskIcon?: string;
+  nav?: NavItem[];
+  shortcuts?: Shortcut[];
+  closeMessage?: string;
+  startMessage?: string;
+}
+
+const {
+  pageTitle,
+  description,
+  windowTitle,
+  taskTitle,
+  taskIcon = '🖥️',
+  nav = [],
+  shortcuts = [],
+  closeMessage,
+  startMessage,
+} = Astro.props;
+
+const stylesheet = sitePath('assets/css/site.css');
+const siteScript = sitePath('assets/js/site.js');
+const home = sitePath();
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#123a35" />
+    <meta name="description" content={description} />
+    <title>{pageTitle}</title>
+    <link rel="stylesheet" href={stylesheet} />
+    <slot name="head" />
+  </head>
+  <body>
+    <div class="desktop">
+      {shortcuts.length > 0 && (
+        <aside class="shortcuts" aria-label="바탕화면 바로가기">
+          {shortcuts.map((shortcut) => shortcut.path ? (
+            <a class="shortcut" href={sitePath(shortcut.path)}>
+              <span class="shortcut-icon">
+                {shortcut.image ? <img src={sitePath(shortcut.image)} alt="" /> : shortcut.icon}
+              </span>
+              <span>{shortcut.label}</span>
+            </a>
+          ) : (
+            <button class="shortcut" type="button" data-message={shortcut.message}>
+              <span class="shortcut-icon">
+                {shortcut.image ? <img src={sitePath(shortcut.image)} alt="" /> : shortcut.icon}
+              </span>
+              <span>{shortcut.label}</span>
+            </button>
+          ))}
+        </aside>
+      )}
+
+      <main class="window" id="mainWindow">
+        <div class="titlebar">
+          <span class="titlebar-name">{windowTitle}</span>
+          <div class="controls">
+            <button class="control" id="minBtn" type="button" aria-label="최소화">_</button>
+            <button class="control" id="maxBtn" type="button" aria-label="크기 변경">□</button>
+            {closeMessage ? (
+              <button class="control" type="button" data-message={closeMessage} aria-label="닫기">×</button>
+            ) : (
+              <a class="control control-link" href={home} aria-label="닫기">×</a>
+            )}
+          </div>
+        </div>
+        <nav class="menubar" aria-label="주 메뉴">
+          {nav.map((item) => <a href={sitePath(item.path)}>{item.label}</a>)}
+        </nav>
+        <div class="window-body"><slot /></div>
+      </main>
+    </div>
+
+    <div class="taskbar">
+      {startMessage ? (
+        <button class="start" type="button" data-message={startMessage}>▣ START</button>
+      ) : (
+        <a class="start start-link" href={home}>▣ START</a>
+      )}
+      <div class="task">{taskIcon} {taskTitle}</div>
+      <div class="clock" id="clock">00:00</div>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+    <script is:inline src={siteScript}></script>
+  </body>
+</html>

@@ -451,7 +451,7 @@ function cardMarkup(place, index, jackpot = false) {
 
 function wait(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-function reelMarkup(pool, finalPlace, index, jackpot) {
+function reelMarkup(pool, finalPlace, jackpot) {
   const faceCount = 8;
   const angleStep = 360 / faceCount;
   const radius = 121;
@@ -480,7 +480,7 @@ function reelMarkup(pool, finalPlace, index, jackpot) {
 async function spinCard(card, index, pool, finalPlace, duration, jackpot) {
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   card.className = 'place-card reel-card';
-  card.innerHTML = reelMarkup(pool, finalPlace, index, jackpot);
+  card.innerHTML = reelMarkup(pool, finalPlace, jackpot);
   const stage = card.querySelector('.reel-stage');
 
   const turns = reduceMotion ? 1 : 5 + index;

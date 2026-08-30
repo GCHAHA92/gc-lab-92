@@ -1,0 +1,23 @@
+---
+interface Props {
+  eyebrow: string;
+  title: string;
+  lines: string[];
+  mascot?: string;
+}
+
+const { eyebrow, title, lines, mascot } = Astro.props;
+---
+
+<section class="hero">
+  <div>
+    <span class="eyebrow">{eyebrow}</span>
+    <h1>{title}</h1>
+    <p class="subtitle">
+      {lines.map((line, index) => (
+        <>{index > 0 && <br />}{line}</>
+      ))}
+    </p>
+  </div>
+  {mascot && <img class="mascot" src={mascot} alt="" />}
+</section>
