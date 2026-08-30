@@ -19,6 +19,7 @@ interface Props {
   pageTitle: string;
   description: string;
   windowTitle: string;
+  windowIcon?: string;
   taskTitle: string;
   taskIcon?: string;
   nav?: NavItem[];
@@ -31,8 +32,9 @@ const {
   pageTitle,
   description,
   windowTitle,
+  windowIcon = 'assets/icons/computer.svg',
   taskTitle,
-  taskIcon = '🖥️',
+  taskIcon = 'assets/icons/computer.svg',
   nav = [],
   shortcuts = [],
   closeMessage,
@@ -79,7 +81,7 @@ const home = sitePath();
 
       <main class="window" id="mainWindow">
         <div class="titlebar">
-          <span class="titlebar-name">{windowTitle}</span>
+          <span class="titlebar-name"><img class="window-icon" src={sitePath(windowIcon)} alt="" />{windowTitle}</span>
           <div class="controls">
             <button class="control" id="minBtn" type="button" aria-label="최소화">_</button>
             <button class="control" id="maxBtn" type="button" aria-label="크기 변경">□</button>
@@ -103,7 +105,7 @@ const home = sitePath();
       ) : (
         <a class="start start-link" href={home}>▣ START</a>
       )}
-      <div class="task">{taskIcon} {taskTitle}</div>
+      <div class="task"><img class="task-icon" src={sitePath(taskIcon)} alt="" />{taskTitle}</div>
       <div class="clock" id="clock">00:00</div>
     </div>
     <div class="toast" id="toast" role="status"></div>

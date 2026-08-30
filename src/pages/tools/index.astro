@@ -12,19 +12,20 @@ const nav = [
 ];
 
 const shortcuts = [
-  { label: 'HOME', icon: '🖥️', path: '' },
-  { label: '방명록', icon: '📝', path: 'guestbook/' },
-  { label: 'NOTES', icon: '📓', path: 'notes/' },
-  { label: 'TRASH', icon: '🗑️', message: '삭제된 아이디어도 언젠가 부활할 수 있습니다.' },
+  { label: 'HOME', image: 'assets/icons/computer.svg', path: '' },
+  { label: '방명록', image: 'assets/icons/guestbook.svg', path: 'guestbook/' },
+  { label: 'NOTES', image: 'assets/icons/notebook.svg', path: 'notes/' },
+  { label: 'TRASH', image: 'assets/icons/trash.svg', message: '삭제된 아이디어도 언젠가 부활할 수 있습니다.' },
 ];
 ---
 
 <DesktopPage
-  pageTitle="MY TOOLS | JISUNG 92"
-  description="JISUNG 92의 업무·일상 도구 모음"
-  windowTitle="📁 MY_TOOLS.EXE"
+  pageTitle="MY TOOLS | 임시 사이트"
+  description="임시 사이트의 업무·일상 도구 모음"
+  windowTitle="MY_TOOLS.EXE"
+  windowIcon="assets/icons/folder.svg"
   taskTitle="MY_TOOLS.EXE"
-  taskIcon="📁"
+  taskIcon="assets/icons/folder.svg"
   nav={nav}
   shortcuts={shortcuts}
 >
@@ -44,5 +45,5 @@ const shortcuts = [
     <button id="nextPage" type="button" aria-label="다음 도구 4개">&gt;</button>
   </nav>
   <p class="disclaimer">※ 개인적으로 만든 참고용 도구이며, 공식 업무시스템이 아닙니다.</p>
-  <div class="terminal"><b>C:\JISUNG_92\TOOLS&gt;</b> 필요한 프로그램을 선택하세요. <span class="cursor"></span></div>
+  <div class="terminal"><b>C:\임시_사이트\TOOLS&gt;</b> 필요한 프로그램을 선택하세요. <span class="cursor"></span></div>
 </DesktopPage>

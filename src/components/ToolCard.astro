@@ -1,5 +1,6 @@
 ---
 import type { ToolItem } from '../data/tools';
+import { sitePath } from '../lib/paths';
 
 interface Props {
   tool: ToolItem;
@@ -11,13 +12,13 @@ const { tool, href } = Astro.props;
 
 {href ? (
   <a class="tool-card" href={href}>
-    <span class="tool-icon">{tool.icon}</span>
+    <span class="tool-icon"><img src={sitePath(tool.iconPath)} alt="" /></span>
     <div><h3>{tool.title}</h3><p>{tool.description}</p></div>
     <span class:list={["status", tool.statusType]}>{tool.status}</span>
   </a>
 ) : (
   <article class="tool-card pending" tabindex="0" data-message={tool.message}>
-    <span class="tool-icon">{tool.icon}</span>
+    <span class="tool-icon"><img src={sitePath(tool.iconPath)} alt="" /></span>
     <div><h3>{tool.title}</h3><p>{tool.description}</p></div>
     <span class:list={["status", tool.statusType]}>{tool.status}</span>
   </article>

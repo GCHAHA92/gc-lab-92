@@ -31,6 +31,8 @@ body.gc-desktop-page::after{
 
 body.gc-desktop-page.gc-clean-screen::after{display:none}
 
+.gc-app-icon{display:inline-block;width:20px;height:20px;margin-right:7px;object-fit:contain;vertical-align:-5px;image-rendering:pixelated}
+
 .gc-shell-shortcuts{
   position:fixed;
   z-index:70;
@@ -118,7 +120,12 @@ body.gc-desktop-page.gc-clean-screen::after{display:none}
   box-shadow:inset 2px 2px #777;
   font-weight:900;
   white-space:nowrap;
+  display:flex;
+  align-items:center;
+  gap:7px;
 }
+
+.gc-shell-task img{display:block;width:18px;height:18px;object-fit:contain;image-rendering:pixelated}
 
 .gc-shell-clock{
   min-width:86px;

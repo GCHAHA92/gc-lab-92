@@ -25,11 +25,12 @@ const published = new Intl.DateTimeFormat('ko-KR', {
 ---
 
 <DesktopPage
-  pageTitle={`${note.data.title} | JISUNG 92`}
+  pageTitle={`${note.data.title} | 임시 사이트`}
   description={note.data.description}
-  windowTitle={`📓 ${note.data.title}`}
+  windowTitle={note.data.title}
+  windowIcon="assets/icons/notebook.svg"
   taskTitle={note.data.title}
-  taskIcon="📓"
+  taskIcon="assets/icons/notebook.svg"
   nav={nav}
 >
   <Hero
@@ -38,5 +39,5 @@ const published = new Intl.DateTimeFormat('ko-KR', {
     lines={[note.data.description]}
   />
   <article class="page-panel article-panel"><Content /></article>
-  <div class="terminal"><b>C:\JISUNG_92\NOTES&gt;</b> 메모 읽기 완료. <span class="cursor"></span></div>
+  <div class="terminal"><b>C:\임시_사이트\NOTES&gt;</b> 메모 읽기 완료. <span class="cursor"></span></div>
 </DesktopPage>

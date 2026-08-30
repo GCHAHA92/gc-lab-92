@@ -12,7 +12,7 @@
 2. `migrations/20260828_0001_guestbook.sql` 전체 내용을 붙여넣고 실행합니다.
 3. 오류 없이 완료됐는지 확인합니다.
 
-## 3. JISUNG 92에 공개 연결정보 입력하기
+## 3. 임시 사이트에 공개 연결정보 입력하기
 
 Supabase Dashboard의 **Project Settings → API**에서 다음 값을 확인합니다.
 

@@ -19,8 +19,8 @@ body:after{content:"";position:fixed;inset:0;z-index:99;pointer-events:none;back
 </style>
 <link rel="stylesheet" href="../../assets/css/desktop.css">
 </head>
-<body data-gc-root="../../" data-gc-task-icon="🚕" data-gc-task-title="출장여비 검증">
-<main class="window"><div class="titlebar"><b>🚕 출장여비 검증.EXE</b><button class="ctl">_</button><button class="ctl">□</button><button class="ctl" type="button" onclick="location.href='../../'" aria-label="JISUNG 92로 돌아가기">×</button></div><div class="menu"><a href="../../">← 홈</a><span>검사</span>　<span>도움말</span></div><div class="content">
+<body data-gc-root="../../" data-gc-task-icon="assets/icons/travel.svg" data-gc-task-title="출장여비 검증">
+<main class="window"><div class="titlebar"><b><img class="gc-app-icon" src="../../assets/icons/travel.svg" alt="">출장여비 검증.EXE</b><button class="ctl">_</button><button class="ctl">□</button><button class="ctl" type="button" onclick="location.href='../../'" aria-label="임시 사이트로 돌아가기">×</button></div><div class="menu"><a href="../../">← 홈</a><span>검사</span>　<span>도움말</span></div><div class="content">
 <section class="hero"><div><span class="tag">INTERNAL WORK TOOL / BROWSER MODE</span><h1>출장여비 검증</h1><p> 결재완료된 출장 내역을 기준으로<br>여비를 계산하고 결과를 표로 보여줍니다.</p></div><div class="privacy">🔒 개인정보 보호 모드<br>모든 계산은 현재 브라우저 안에서만 처리되며, 선택한 파일과 결과는 외부 서버로 전송되거나 저장되지 않습니다.</div></section>
 <details class="criteria">
  <summary>📋 점검 기준 보기 — 오류 4종·확인사항 4종</summary>
@@ -76,7 +76,7 @@ async function processFile(file){if(typeof XLSX==='undefined')throw new Error('�
 function render(){const errorCount=Object.values(result.errors).reduce((s,a)=>s+a.length,0),checkCount=Object.values(result.checks).reduce((s,a)=>s+a.length,0),people=new Set(result.summary.map(r=>`${r['성명']}|${r['식별번호']}`)).size,amount=result.summary.reduce((s,r)=>s+r['미전송 제외 금액(원)'],0);$('#people').textContent=fmt(people)+'명';$('#amount').textContent=fmt(amount)+'원';$('#errors').textContent=`오류 ${fmt(errorCount)} · 확인 ${fmt(checkCount)}`;$('#summaryTable').innerHTML=table(result.summary);$('#errorGrid').innerHTML=TYPES.map(([k,label])=>`<button class="errcard" data-kind="error" data-type="${k}"><span>${label}</span><b>${result.errors[k].length}건</b></button>`).join('');$('#checkGrid').innerHTML=CHECKS.map(([k,label])=>`<button class="errcard checkcard" data-kind="check" data-type="${k}"><span>${label}</span><b>${result.checks[k].length}건</b></button>`).join('');$('#errorTable').innerHTML='<div class="empty">오류유형 또는 확인사항을 선택하면 상세 내역이 표시됩니다.</div>';document.querySelectorAll('.errcard').forEach(b=>b.onclick=()=>{const source=b.dataset.kind==='check'?result.checks:result.errors;$('#errorTable').innerHTML=table(source[b.dataset.type].map(publicRow))});$('#results').classList.remove('hidden');$('#notice').className='notice ok';$('#notice').textContent=`검사 완료: ${result.rows.length}건을 확인했습니다.`}
 function exportExcel(){
  const wb=XLSX.utils.book_new();
- wb.Props={Title:'여비정산 오류점검결과',Subject:'출장여비 정산 및 오류유형 점검',Author:'JISUNG 92'};
+ wb.Props={Title:'여비정산 오류점검결과',Subject:'출장여비 정산 및 오류유형 점검',Author:'임시 사이트'};
  const sumHeader=['성명','식별번호','정산월','출장건수','4시간 미만','4시간 이상','차량사용','미전송 제외 금액(원)','미전송 포함 금액(원)'];
  const guide=[
   ['점검 개요','',''],

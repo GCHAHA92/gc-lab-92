@@ -1,4 +1,4 @@
-# JISUNG 92 · Astro migration
+# 임시 사이트 · Astro migration
 
 업무와 일상을 조금 편하게 만드는 개인 작업실입니다. Astro가 개인 홈페이지와 콘텐츠 페이지를 정적으로 생성하고, 기존 브라우저 도구는 독립 HTML·JavaScript 앱으로 유지합니다. 방명록 데이터와 인증은 Supabase를 사용합니다.
 

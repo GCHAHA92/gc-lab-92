@@ -1,4 +1,4 @@
--- JISUNG 92 방명록 초기 설정
+-- 임시 사이트 방명록 초기 설정
 -- Supabase Dashboard > SQL Editor에서 전체 내용을 한 번 실행합니다.
 
 create extension if not exists pgcrypto with schema extensions;
