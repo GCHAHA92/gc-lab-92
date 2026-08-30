@@ -31,6 +31,29 @@ body.gc-desktop-page::after{
 
 body.gc-desktop-page.gc-clean-screen::after{display:none}
 
+body.gc-window-maximized{overflow:hidden}
+
+.window.gc-window-maximized{
+  position:fixed!important;
+  z-index:90!important;
+  inset:0 0 47px!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  overflow:auto!important;
+}
+
+.window.gc-window-maximized > .titlebar{
+  position:sticky;
+  z-index:3;
+  top:0;
+}
+
+.window.gc-window-minimized > :not(.titlebar){display:none!important}
+
 .gc-app-icon{display:inline-block;width:20px;height:20px;margin-right:7px;object-fit:contain;vertical-align:-5px;image-rendering:pixelated}
 
 .gc-shell-shortcuts{

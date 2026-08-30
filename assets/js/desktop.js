@@ -46,6 +46,28 @@
   body.prepend(shortcuts);
   body.append(taskbar, toast);
 
+  const appWindow = body.querySelector('.window');
+  const minimizeButton = appWindow?.querySelector('[aria-label="최소화"]');
+  const maximizeButton = appWindow?.querySelector('[aria-label="최대화"]');
+
+  const setMaximized = maximized => {
+    if (!appWindow || !maximizeButton) return;
+    appWindow.classList.toggle('gc-window-maximized', maximized);
+    body.classList.toggle('gc-window-maximized', maximized);
+    maximizeButton.textContent = maximized ? '❐' : '□';
+    maximizeButton.setAttribute('aria-label', maximized ? '이전 크기로 복원' : '최대화');
+  };
+
+  minimizeButton?.addEventListener('click', () => {
+    appWindow.classList.toggle('gc-window-minimized');
+  });
+  maximizeButton?.addEventListener('click', () => {
+    setMaximized(!appWindow.classList.contains('gc-window-maximized'));
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && appWindow?.classList.contains('gc-window-maximized')) setMaximized(false);
+  });
+
   let toastTimer;
   const showToast = message => {
     clearTimeout(toastTimer);

@@ -7,9 +7,20 @@
   document.querySelectorAll('[data-message][tabindex]').forEach(element => element.addEventListener('keydown', event => {
     if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); showToast(element.dataset.message); }
   }));
-  const body = $('.window-body');
-  $('#minBtn')?.addEventListener('click', () => { body.hidden = !body.hidden; });
-  $('#maxBtn')?.addEventListener('click', () => $('#mainWindow')?.classList.toggle('max'));
+  const mainWindow = $('#mainWindow');
+  const maxButton = $('#maxBtn');
+  $('#minBtn')?.addEventListener('click', () => mainWindow?.classList.toggle('gc-window-minimized'));
+  const setMaximized = maximized => {
+    if (!mainWindow || !maxButton) return;
+    mainWindow.classList.toggle('gc-window-maximized', maximized);
+    document.body.classList.toggle('gc-window-maximized', maximized);
+    maxButton.textContent = maximized ? '❐' : '□';
+    maxButton.setAttribute('aria-label', maximized ? '이전 크기로 복원' : '최대화');
+  };
+  maxButton?.addEventListener('click', () => setMaximized(!mainWindow.classList.contains('gc-window-maximized')));
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && mainWindow?.classList.contains('gc-window-maximized')) setMaximized(false);
+  });
   const toolGrid = $('.tool-grid');
   if (toolGrid) {
     const items = [...toolGrid.children], pageSize = 4, pageCount = Math.ceil(items.length / pageSize); let page = 0;
