@@ -13,9 +13,19 @@
   const toolGrid = $('.tool-grid');
   if (toolGrid) {
     const items = [...toolGrid.children], pageSize = 4, pageCount = Math.ceil(items.length / pageSize); let page = 0;
-    const render = () => { items.forEach((item, index) => { item.hidden = Math.floor(index / pageSize) !== page; }); $('#pageLabel').textContent = `${page + 1} / ${pageCount}`; $('#prevPage').disabled = page === 0; $('#nextPage').disabled = page === pageCount - 1; };
-    if (pageCount > 1) { $('#pager').hidden = false; $('#prevPage').addEventListener('click', () => { page -= 1; render(); }); $('#nextPage').addEventListener('click', () => { page += 1; render(); }); }
-    render();
+    const render = nextPage => {
+      const previousPage = page;
+      page = Math.max(0, Math.min(nextPage, pageCount - 1));
+      items.forEach((item, index) => { item.hidden = Math.floor(index / pageSize) !== page; });
+      $('#pageLabel').textContent = `${page + 1} / ${pageCount}`;
+      $('#prevPage').disabled = page === 0;
+      $('#nextPage').disabled = page === pageCount - 1;
+      toolGrid.classList.remove('page-next', 'page-prev');
+      void toolGrid.offsetWidth;
+      if (page !== previousPage) toolGrid.classList.add(page > previousPage ? 'page-next' : 'page-prev');
+    };
+    if (pageCount > 1) { $('#pager').hidden = false; $('#prevPage').addEventListener('click', () => render(page - 1)); $('#nextPage').addEventListener('click', () => render(page + 1)); }
+    render(0);
   }
   const clock = $('#clock');
   const updateClock = () => { if (clock) clock.textContent = new Intl.DateTimeFormat('ko-KR', { hour:'2-digit', minute:'2-digit', hour12:false }).format(new Date()); };

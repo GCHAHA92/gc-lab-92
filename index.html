@@ -9,6 +9,7 @@
 <div class="desktop">
   <aside class="shortcuts" aria-label="바탕화면 바로가기">
     <a class="shortcut" href="./tools/"><span class="shortcut-icon">📁</span><span>MY_TOOLS</span></a>
+    <button class="shortcut" type="button" data-message="새올행정시스템 바로가기입니다."><span class="shortcut-icon"><img src="./assets/images/saeol.ico" alt=""></span><span>새올</span></button>
     <a class="shortcut" href="./about/"><span class="shortcut-icon">🖥️</span><span>ABOUT_ME</span></a>
     <a class="shortcut" href="./notes/"><span class="shortcut-icon">📓</span><span>NOTES</span></a>
     <a class="shortcut" href="./guestbook/"><span class="shortcut-icon">📝</span><span>방명록</span></a>
@@ -19,13 +20,18 @@
     <nav class="menubar" aria-label="주 메뉴"><a href="./">Home</a><a href="./tools/">Tools</a><a href="./notes/">Notes</a><a href="./about/">About</a><a href="./guestbook/">Guestbook</a></nav>
     <div class="window-body">
       <section class="hero"><div><span class="eyebrow">★ PERSONAL DESKTOP / EST. 1992 ★</span><h1>JISUNG 92</h1><p class="subtitle">업무와 일상을 조금 편하게 만드는<br>작고 수상한 개인 작업실.zip</p></div><img class="mascot" src="./assets/images/geumcheon-hankki-logo.png" alt=""></section>
-      <div class="section-head"><h2>▣ DIRECTORY</h2><p><span class="blink">●</span> SYSTEM ONLINE</p></div>
-      <section class="directory-grid">
-        <a class="directory" href="./tools/"><span class="directory-icon">📁</span><div><h3>MY_TOOLS</h3><p>업무와 일상을 위해 만든 작은 도구 모음</p></div><span class="status live">OPEN</span></a>
-        <a class="directory" href="./about/"><span class="directory-icon">🖥️</span><div><h3>ABOUT_ME</h3><p>이 작업실과 만드는 것들에 대한 짧은 소개</p></div><span class="status live">OPEN</span></a>
-        <a class="directory" href="./notes/"><span class="directory-icon">📓</span><div><h3>NOTES</h3><p>개발 과정과 생각을 남기는 메모장</p></div><span class="status live">OPEN</span></a>
-        <a class="directory" href="./guestbook/"><span class="directory-icon">📝</span><div><h3>GUESTBOOK</h3><p>닉네임으로 짧은 글과 비밀글 남기기</p></div><span class="status live">OPEN</span></a>
+      <div class="section-head"><h2>▣ INSTALLED TOOLS</h2><p><span class="blink">●</span> SYSTEM ONLINE</p></div>
+      <section class="tool-grid">
+        <article class="tool-card pending" tabindex="0" data-message="초과근무 검증기는 연결 준비 중입니다."><span class="tool-icon">⏱️</span><div><h3>초과근무 검증</h3><p>지급자료 비교 · 오류 확인 · 결과 다운로드</p></div><span class="status wait">준비 중</span></article>
+        <a class="tool-card" href="./tools/travel/"><span class="tool-icon">🚕</span><div><h3>출장여비 검증</h3><p>중복 지급 · 시간 오류 · 여비 산정 점검</p></div><span class="status live">사용 가능</span></a>
+        <a class="tool-card" href="./tools/lunch/"><span class="tool-icon">🍚</span><div><h3>금천한끼</h3><p>오늘 점심을 대신 고민해주는 룰렛</p></div><span class="status live">사용 가능</span></a>
+        <a class="tool-card" href="./tools/leave/"><span class="tool-icon">💰</span><div><h3>연가보상비 계산기</h3><p>직급·호봉과 미사용 연가로 예상 지급액 계산</p></div><span class="status live">사용 가능</span></a>
+        <a class="tool-card" href="./tools/qr/"><span class="tool-icon">▦</span><div><h3>QR코드 생성기</h3><p>주소를 QR 이미지로 만들고 복사·다운로드</p></div><span class="status live">사용 가능</span></a>
+        <a class="tool-card" href="./tools/fingerprint/"><span class="tool-icon">☝️</span><div><h3>중간지문 점검</h3><p>주말 출퇴근시간과 지문인식 내역 비교</p></div><span class="status live">실험 중</span></a>
+        <a class="tool-card" href="./guestbook/"><span class="tool-icon">✎</span><div><h3>방명록</h3><p>닉네임으로 짧은 글과 비밀글 남기기</p></div><span class="status live">사용 가능</span></a>
+        <article class="tool-card pending" tabindex="0" data-message="다음 실험을 기다리는 빈 자리입니다."><span class="tool-icon">❔</span><div><h3>EMPTY SLOT</h3><p>다음 실험을 기다리는 빈 자리</p></div><span class="status wait">비어 있음</span></article>
       </section>
+      <nav class="pager" id="pager" aria-label="도구 목록 페이지" hidden><button id="prevPage" type="button" aria-label="이전 도구 4개">&lt;</button><strong class="page-label" id="pageLabel">1 / 1</strong><button id="nextPage" type="button" aria-label="다음 도구 4개">&gt;</button></nav>
       <div class="terminal"><b>C:\JISUNG_92&gt;</b> 새로운 생각을 실행 가능한 무언가로 만드는 중... <span class="cursor"></span></div>
     </div>
   </main>
