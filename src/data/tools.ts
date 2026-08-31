@@ -29,7 +29,7 @@ export const tools: ToolItem[] = [
   },
   {
     title: '금천한끼',
-    description: '오늘 점심을 대신 고민해주는 룰렛',
+    description: '오늘 점심 뭐먹지?',
     icon: '🍚',
     href: 'tools/lunch/',
     status: '사용 가능',
@@ -37,7 +37,7 @@ export const tools: ToolItem[] = [
   },
   {
     title: '연가보상비 계산기',
-    description: '직급·호봉과 미사용 연가로 예상 지급액 계산',
+    description: '직급·호봉으로 예상 지급액 계산',
     icon: '💰',
     href: 'tools/leave/',
     status: '사용 가능',
@@ -45,7 +45,7 @@ export const tools: ToolItem[] = [
   },
   {
     title: 'QR코드 생성기',
-    description: '주소를 QR 이미지로 만들고 복사·다운로드',
+    description: 'url 주소를 QR 이미지로 생성, 복사·다운로드',
     icon: '▦',
     href: 'tools/qr/',
     status: '사용 가능',
