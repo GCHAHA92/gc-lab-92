@@ -37,12 +37,12 @@ jobs:
 
       - name: Commit updated public data
         run: |
-          if git diff --quiet -- data/restaurants.json; then
+          if git diff --quiet -- public/data/restaurants.json; then
             echo "No restaurant data changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/restaurants.json
+          git add public/data/restaurants.json
           git commit -m "Update public restaurant metadata"
           git push

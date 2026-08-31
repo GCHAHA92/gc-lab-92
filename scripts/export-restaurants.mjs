@@ -41,8 +41,8 @@ try {
     restaurants,
   };
 
-  await mkdir('data', { recursive: true });
-  await writeFile('data/restaurants.json', JSON.stringify(payload, null, 2) + '\n', 'utf8');
+  await mkdir('public/data', { recursive: true });
+  await writeFile('public/data/restaurants.json', JSON.stringify(payload, null, 2) + '\n', 'utf8');
   console.log(`Exported ${restaurants.length} public restaurant records.`);
 } finally {
   await client.close();

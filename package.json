@@ -3,9 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "prepare:static": "node scripts/prepare-static.mjs",
-    "dev": "npm run prepare:static && astro dev",
-    "build": "npm run prepare:static && astro build",
+    "dev": "astro dev",
+    "build": "astro build",
     "preview": "astro preview",
     "check": "astro check"
   },
