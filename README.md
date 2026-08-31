@@ -29,4 +29,4 @@ npm run dev
 
 ## 배포 주소
 
-기본 배포 주소는 `https://gchaha92.github.io/gc-lab-92/`입니다. `SITE_URL` 환경변수를 지정하면 사용자 도메인용 루트 경로로 빌드합니다.
+기본 배포 주소는 `https://nonbisa.com/`입니다. GitHub Pages의 프로젝트 주소는 사용자 도메인으로 연결되며, `SITE_URL` 환경변수로 별도의 배포 주소를 지정할 수 있습니다.

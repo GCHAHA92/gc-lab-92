@@ -44,7 +44,9 @@ const {
 const stylesheet = sitePath('assets/css/site.css');
 const desktopStylesheet = sitePath('assets/css/desktop.css');
 const siteScript = sitePath('assets/js/site.js');
+const analyticsScript = sitePath('assets/js/analytics.js');
 const home = sitePath();
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -54,6 +56,13 @@ const home = sitePath();
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#123a35" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary" />
     <title>{pageTitle}</title>
     <link rel="stylesheet" href={desktopStylesheet} />
     <link rel="stylesheet" href={stylesheet} />
@@ -111,6 +120,7 @@ const home = sitePath();
       <div class="clock" id="clock">00:00</div>
     </div>
     <div class="toast" id="toast" role="status"></div>
+    <script is:inline src={analyticsScript}></script>
     <script is:inline src={siteScript}></script>
   </body>
 </html>

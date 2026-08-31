@@ -9,6 +9,10 @@
   const taskIcon = body.dataset.gcTaskIcon || 'assets/icons/computer.svg';
   const taskIconPath = `${root}${taskIcon}`;
 
+  const analytics = document.createElement('script');
+  analytics.src = `${root}assets/js/analytics.js`;
+  document.head.append(analytics);
+
   const shortcuts = document.createElement('aside');
   shortcuts.className = 'gc-shell-shortcuts';
   shortcuts.setAttribute('aria-label', '바탕화면 바로가기');

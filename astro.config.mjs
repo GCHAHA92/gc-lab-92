@@ -1,10 +1,10 @@
 import { defineConfig } from 'astro/config';
 
-const customDomain = process.env.SITE_URL;
+const site = process.env.SITE_URL || 'https://nonbisa.com';
 
 export default defineConfig({
-  site: customDomain || 'https://gchaha92.github.io',
-  base: customDomain ? undefined : '/gc-lab-92',
+  site,
+  base: '/',
   publicDir: './.astro-public',
   output: 'static',
   trailingSlash: 'always',
