@@ -7,7 +7,6 @@ const output = resolve(root, '.astro-public');
 const directories = [
   'assets',
   'data',
-  'apps',
   'guestbook',
   'tools/travel',
   'tools/lunch',
