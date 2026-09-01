@@ -1,0 +1,78 @@
+media:
+  input: public/assets/notes
+  output: /assets/notes
+  rename: safe
+  categories: [image]
+
+content:
+  - name: notes
+    label: NOTES
+    type: collection
+    path: src/content/notes
+    format: yaml-frontmatter
+    subfolders: false
+    exclude:
+      - _template.md
+    filename:
+      template: "{year}-{month}-{day}-{title}.md"
+      field: false
+    view:
+      primary: title
+      fields:
+        - publishedAt
+        - draft
+      sort: publishedAt
+      order: desc
+    fields:
+      - name: title
+        label: 제목
+        type: string
+        required: true
+        description: 글 목록과 브라우저 제목에 표시됩니다.
+      - name: description
+        label: 한 줄 설명
+        type: text
+        required: true
+        description: Notes 목록과 검색 결과에 표시할 요약입니다.
+      - name: publishedAt
+        label: 작성일
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: updatedAt
+        label: 수정일
+        type: date
+        required: false
+        default: ""
+        options:
+          format: yyyy-MM-dd
+      - name: tags
+        label: 태그
+        type: string
+        list: true
+        required: false
+        description: 태그를 하나씩 추가할 수 있습니다.
+      - name: draft
+        label: 임시저장
+        type: boolean
+        default: true
+        description: 끄면 사이트에 공개됩니다.
+      - name: body
+        label: 본문
+        type: rich-text
+        required: true
+        options:
+          format: markdown
+          switcher: true
+
+settings:
+  content:
+    merge: true
+  commit:
+    identity: user
+    templates:
+      create: "content(notes): {filename} 작성"
+      update: "content(notes): {filename} 수정"
+      delete: "content(notes): {filename} 삭제"
+      rename: "content(notes): {oldFilename} -> {newFilename}"
