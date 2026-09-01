@@ -55,6 +55,7 @@ const siteScript = sitePath('assets/js/site.js');
 const analyticsScript = sitePath('assets/js/analytics.js');
 const home = sitePath();
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const isPrimarySite = Astro.site?.hostname === 'nonbisa.com';
 ---
 
 <!doctype html>
@@ -74,6 +75,14 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
     <title>{pageTitle}</title>
     <link rel="stylesheet" href={desktopStylesheet} />
     <link rel="stylesheet" href={stylesheet} />
+    {isPrimarySite && (
+      <script
+        is:inline
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3535288587120077"
+        crossorigin="anonymous"
+      ></script>
+    )}
     <slot name="head" />
   </head>
   <body>
