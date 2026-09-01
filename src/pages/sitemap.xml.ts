@@ -3,8 +3,10 @@ import { getCollection } from 'astro:content';
 const staticPaths = [
   '',
   'about/',
+  'contact/',
   'changelog/',
   'notes/',
+  'privacy/',
   'tools/',
   'tools/travel/',
   'tools/lunch/',

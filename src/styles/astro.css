@@ -78,6 +78,28 @@
 .article-panel pre { overflow-x: auto; padding: 15px; background: #111; color: #79ffb5; }
 .article-panel img { max-width: 100%; height: auto; }
 
+.article-panel ul {
+  padding-left: 1.4em;
+}
+
+.article-panel li + li {
+  margin-top: .45em;
+}
+
+.site-policy-links {
+  display: flex;
+  justify-content: center;
+  gap: 9px;
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--ink);
+  font: 700 12px/1.5 "Malgun Gothic", sans-serif;
+}
+
+.site-policy-links a {
+  color: inherit;
+}
+
 @media (max-width: 680px) {
   .note-entry { grid-template-columns: 1fr; gap: 7px; }
 }

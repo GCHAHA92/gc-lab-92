@@ -123,7 +123,14 @@ const isPrimarySite = Astro.site?.hostname === 'nonbisa.com';
         <nav class="menubar" aria-label="주 메뉴">
           {nav.map((item) => <a href={sitePath(item.path)}>{item.label}</a>)}
         </nav>
-        <div class="window-body"><slot /></div>
+        <div class="window-body">
+          <slot />
+          <footer class="site-policy-links" aria-label="사이트 정책 및 문의">
+            <a href={sitePath('privacy/')}>개인정보처리방침</a>
+            <span aria-hidden="true">·</span>
+            <a href={sitePath('contact/')}>문의</a>
+          </footer>
+        </div>
       </main>
     </div>
 

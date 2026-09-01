@@ -1,0 +1,58 @@
+---
+import DesktopPage from '../../layouts/DesktopPage.astro';
+import Hero from '../../components/Hero.astro';
+import { sitePath } from '../../lib/paths';
+
+const nav = [
+  { label: '← Home', path: '' },
+  { label: 'About', path: 'about/' },
+  { label: 'Contact', path: 'contact/' },
+];
+
+const contactUrl = sitePath('contact/');
+---
+
+<DesktopPage
+  pageTitle="개인정보처리방침 | 임시 사이트"
+  description="nonbisa.com 개인정보처리방침과 광고·분석 쿠키 안내"
+  windowTitle="PRIVACY_POLICY.TXT"
+  taskTitle="PRIVACY_POLICY.TXT"
+  nav={nav}
+>
+  <Hero
+    eyebrow="★ PRIVACY & COOKIES ★"
+    title="개인정보처리방침"
+    lines={['사이트 이용 과정에서 처리되는 정보와', '광고·분석 서비스 사용 내용을 안내합니다.']}
+  />
+
+  <article class="page-panel article-panel">
+    <p><strong>시행일: 2026년 9월 1일</strong></p>
+
+    <h2>1. 기본 원칙</h2>
+    <p>nonbisa.com(이하 ‘본 사이트’)은 개인이 운영하는 도구·기록 사이트입니다. 서비스 제공에 필요한 범위에서만 정보를 처리하며, 이용자가 업로드한 업무 파일은 특별한 안내가 없는 한 서버로 전송하지 않고 현재 브라우저 안에서 처리합니다.</p>
+
+    <h2>2. 자동으로 수집될 수 있는 정보</h2>
+    <p>사이트 품질 개선과 이용 현황 확인을 위해 Google Analytics를 사용합니다. 이 과정에서 쿠키, 접속 시각, 방문 페이지, 브라우저·기기 정보, 대략적인 지역 및 이용 상호작용 정보가 수집될 수 있습니다. 본 사이트는 분석 정보를 이용해 방문자의 이름이나 연락처를 직접 식별하지 않습니다.</p>
+
+    <h2>3. Google 광고와 쿠키</h2>
+    <p>본 사이트는 Google AdSense를 통해 광고를 게재할 수 있습니다. Google 및 서드 파티 공급업체는 쿠키를 사용하여 이용자의 본 사이트 또는 다른 웹사이트 방문 기록을 바탕으로 광고를 제공할 수 있습니다.</p>
+    <ul>
+      <li>Google의 광고 쿠키를 통해 Google과 파트너는 방문 기록에 기반한 광고를 게재할 수 있습니다.</li>
+      <li>이용자는 <a href="https://adssettings.google.com/" target="_blank" rel="noopener noreferrer">Google 광고 설정</a>에서 개인 맞춤 광고를 관리하거나 거부할 수 있습니다.</li>
+      <li>서드 파티 광고 공급업체의 맞춤 광고 쿠키는 <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">AboutAds 선택 페이지</a>에서도 관리할 수 있습니다.</li>
+      <li>Google의 정보 처리 방식은 <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Google 개인정보처리방침</a>에서 확인할 수 있습니다.</li>
+    </ul>
+
+    <h2>4. 방명록 정보</h2>
+    <p>방명록을 작성하면 닉네임, 작성 내용, 비밀글 여부와 수정·삭제 확인용 비밀번호를 처리합니다. 비밀번호는 원문이 아닌 해시 형태로 저장되며, 방명록 정보는 이용자가 직접 삭제하거나 운영상 삭제할 때까지 Supabase에 보관됩니다. 비밀글 내용은 비밀번호 확인 전까지 공개 목록에 표시되지 않습니다.</p>
+
+    <h2>5. 외부 서비스</h2>
+    <p>사이트 기능 제공을 위해 Google, Supabase, Kakao 지도 및 콘텐츠 전송 네트워크 등 외부 서비스를 사용할 수 있습니다. 외부 서비스가 처리하는 정보에는 해당 서비스의 개인정보처리방침이 적용됩니다.</p>
+
+    <h2>6. 이용자의 선택과 문의</h2>
+    <p>브라우저 설정에서 쿠키를 차단하거나 삭제할 수 있습니다. 쿠키를 제한하면 일부 지도·방명록·광고 기능이 정상적으로 작동하지 않을 수 있습니다. 개인정보 관련 문의와 방명록 삭제 지원은 <a href={contactUrl}>문의 페이지</a>를 통해 요청할 수 있습니다.</p>
+
+    <h2>7. 방침 변경</h2>
+    <p>서비스나 관련 정책이 변경되면 이 페이지의 내용과 시행일을 갱신합니다.</p>
+  </article>
+</DesktopPage>
